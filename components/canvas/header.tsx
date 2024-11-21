@@ -135,99 +135,98 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
     }
   };
   return (
-    <>
-      <header className="opacity-95 z-10 absolute rounded-3xl drop-shadow-lg my-2 border-b border-muted p-4 flex items-center justify-between h-16 bg-gradient-to-r from-cyan-100 to-cyan-200 w-full">
-        <h1 className="text-3xl font-bold">Chromanvas</h1>
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handlePanningToggle}
-            className={panningEnabled ? "bg-blue-500 text-white" : ""}
-          >
-            <Hand className="w-5 h-5" />
-            <span className="sr-only">Toggle Panning</span>
-          </Button>
+    <header
+      className="opacity-95 z-10 absolute rounded-3xl drop-shadow-lg my-2 border-b border-muted p-4 flex items-center justify-between h-16 w-full
+  bg-gradient-to-r from-cyan-100 to-cyan-200 dark:from-gray-700 dark:to-gray-900"
+    >
+      <h1 className="text-3xl font-bold">Chromanvas</h1>
+      <div className="flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handlePanningToggle}
+          className={panningEnabled ? "bg-blue-500 text-white" : ""}
+        >
+          <Hand className="w-5 h-5" />
+          <span className="sr-only">Toggle Panning</span>
+        </Button>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleShapeIconClick("text")}
-            className={drawingMode === "text" ? "bg-blue-500 text-white" : ""}
-          >
-            <Type className="w-5 h-5" />
-            <span className="sr-only">Text</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              handleFreeDrawing();
-            }}
-            className={drawingMode === "pencil" ? "bg-blue-500 text-white" : ""}
-          >
-            <PencilIcon className="w-5 h-5" />
-            <span className="sr-only">Pencil</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleShapeIconClick("circle")}
-            className={drawingMode === "circle" ? "bg-blue-500 text-white" : ""}
-          >
-            <CircleIcon className="w-5 h-5" />
-            <span className="sr-only">Circle</span>
-          </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => handleShapeIconClick("text")}
+          className={drawingMode === "text" ? "bg-blue-500 text-white" : ""}
+        >
+          <Type className="w-5 h-5" />
+          <span className="sr-only">Text</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            handleFreeDrawing();
+          }}
+          className={drawingMode === "pencil" ? "bg-blue-500 text-white" : ""}
+        >
+          <PencilIcon className="w-5 h-5" />
+          <span className="sr-only">Pencil</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => handleShapeIconClick("circle")}
+          className={drawingMode === "circle" ? "bg-blue-500 text-white" : ""}
+        >
+          <CircleIcon className="w-5 h-5" />
+          <span className="sr-only">Circle</span>
+        </Button>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleShapeIconClick("rect")}
-            className={drawingMode === "rect" ? "bg-blue-500 text-white" : ""}
-          >
-            <RectangleVerticalIcon className="w-5 h-5" />
-            <span className="sr-only">Rectangle</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleShapeIconClick("triangle")}
-            className={
-              drawingMode === "triangle" ? "bg-blue-500 text-white" : ""
-            }
-          >
-            <TriangleIcon className="w-5 h-5" />
-            <span className="sr-only">Triangle</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleShapeIconClick("line")}
-            className={drawingMode === "line" ? "bg-blue-500 text-white" : ""}
-          >
-            <Slash className="w-5 h-5" />
-            <span className="sr-only">Line</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <ImageIcon className="w-5 h-5" />
-            <span className="sr-only">Image</span>
-          </Button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            onChange={handleFileChange}
-          />
-          <Button variant="destructive" size="icon" onClick={clearCanvas}>
-            <TrashIcon className="w-5 h-5" />
-            <span className="sr-only">Clear Canvas</span>
-          </Button>
-        </div>
-      </header>
-    </>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => handleShapeIconClick("rect")}
+          className={drawingMode === "rect" ? "bg-blue-500 text-white" : ""}
+        >
+          <RectangleVerticalIcon className="w-5 h-5" />
+          <span className="sr-only">Rectangle</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => handleShapeIconClick("triangle")}
+          className={drawingMode === "triangle" ? "bg-blue-500 text-white" : ""}
+        >
+          <TriangleIcon className="w-5 h-5" />
+          <span className="sr-only">Triangle</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => handleShapeIconClick("line")}
+          className={drawingMode === "line" ? "bg-blue-500 text-white" : ""}
+        >
+          <Slash className="w-5 h-5" />
+          <span className="sr-only">Line</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <ImageIcon className="w-5 h-5" />
+          <span className="sr-only">Image</span>
+        </Button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
+        <Button variant="destructive" size="icon" onClick={clearCanvas}>
+          <TrashIcon className="w-5 h-5" />
+          <span className="sr-only">Clear Canvas</span>
+        </Button>
+      </div>
+    </header>
   );
 }

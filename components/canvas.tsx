@@ -226,7 +226,7 @@ const CanvasPage = () => {
 
   return (
     <div className="flex-col relative">
-      <div className="relative z-30 mx-6">
+      <div className="relative z-30 mx-6 ">
         <Header fileInputRef={fileInputRef} />
       </div>
 
@@ -235,11 +235,10 @@ const CanvasPage = () => {
           <SideBar />
         </div>
 
-        <div className="absolute bottom-20 left-7 z-30 mb-2">
+        <div className="absolute bottom-20 left-7 z-30 mb-2 ">
           <ZoomElement />
         </div>
-        <div className="absolute bottom-2 right-1 z-30 mr-8 mb-2">
-          {/* <Dropdown /> */}
+        <div className="absolute bottom-2 right-1 z-30 mr-8 -mb-1 ">
           <SideSheet />
         </div>
 

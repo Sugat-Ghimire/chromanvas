@@ -33,10 +33,10 @@ const ZoomElement = () => {
   return (
     <div
       id="zoomControl"
-      className="absolute w-32 h-56 ml-0.5 mt-7 drop-shadow-lg z-50"
+      className="absolute w-32 h-56 ml-0.5 mt-7 drop-shadow-lg z-50 "
     >
-      <div className="z-10 sticky w-32">
-        <div className="flex items-center justify-center rounded-lg bg-pink-100 p-2">
+      <div className="z-10 sticky w-32 ">
+        <div className="flex items-center justify-center rounded-lg bg-pink-100 p-2 dark:bg-gray-900">
           <button
             className="text-black font-medium text-sm py-1 px-3 rounded-l-md "
             onClick={decrementZoom}
@@ -44,7 +44,7 @@ const ZoomElement = () => {
             onMouseUp={clearDecrement}
             onMouseLeave={clearDecrement}
           >
-            <Minus size={18} />
+            <Minus size={18} className="dark:text-white" />
           </button>
           <div className=" h-full border-solid border-slate-950 w-px"></div>
           <div className="mx-1 text-lg font-normal">
@@ -58,7 +58,7 @@ const ZoomElement = () => {
             onMouseUp={clearIncrement}
             onMouseLeave={clearIncrement}
           >
-            <Plus size={18} />
+            <Plus size={18} className="dark:text-white" />
           </button>
         </div>
       </div>
