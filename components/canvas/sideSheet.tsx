@@ -23,11 +23,11 @@ import {
 } from "@/components/ui/popover";
 import {
   AlignJustify,
+  X,
   Download,
   Paintbrush,
   Info,
   File,
-  Github,
   Sun,
   Moon,
   Monitor,
@@ -44,13 +44,14 @@ export default function UtilitySidebar({ onExport }) {
   const [canvasColor, setCanvasColor] = useState(
     canvas?.backgroundColor || "#FBFBFC"
   );
-  const [theme, setTheme] = useState("system"); // Tracks selected theme mode
+  const [theme, setTheme] = useState("system");
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const setImageStore = useImageStore((state: any) => state.setImageStore);
 
   const handleColorChange = (color) => {
     setCanvasColor(color.hex);
   };
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const setImageStore = useImageStore((state: any) => state.setImageStore);
 
   useEffect(() => {
     canvas?.set({
@@ -67,9 +68,9 @@ export default function UtilitySidebar({ onExport }) {
       document.documentElement.classList.remove("dark");
     } else {
       document.documentElement.classList.remove("dark");
-      // System default logic can be applied here if needed
     }
   };
+
   const onFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -95,11 +96,24 @@ export default function UtilitySidebar({ onExport }) {
       reader.readAsDataURL(file);
     }
   };
+
   return (
-    <Sheet>
+    <Sheet open={isSheetOpen} onOpenChange={(open) => setIsSheetOpen(open)}>
       <SheetTrigger>
-        <AlignJustify className="w-8 h-8 cursor-pointer hover:text-blue-500 transition-colors duration-200 dark:text-gray-900 " />
+        <div className="relative w-8 h-8">
+          <AlignJustify
+            className={`absolute w-8 h-8 cursor-pointer hover:text-blue-500 transition-all duration-300 dark:text-gray-900 ${
+              isSheetOpen ? "opacity-0 scale-75" : "opacity-100 scale-100"
+            }`}
+          />
+          <X
+            className={`absolute w-8 h-8 cursor-pointer hover:text-blue-500 transition-all duration-300 dark:text-gray-900 ${
+              isSheetOpen ? "opacity-100 scale-100" : "opacity-0 scale-75"
+            }`}
+          />
+        </div>
       </SheetTrigger>
+
       <SheetContent className="w-[192px] top-20 h-4/5 sm:w-[240px] p-4 bg-white dark:bg-gray-900 text-gray-800 dark:text-white pt-4 my-[9px] mx-7 rounded-xl">
         <SheetHeader>
           <SheetTitle className="text-xl font-bold text-center mb-4 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
@@ -162,7 +176,7 @@ export default function UtilitySidebar({ onExport }) {
               style={{ backgroundColor: canvasColor }}
             />
             {showColorPicker && (
-              <div className="absolute ">
+              <div className="absolute">
                 <SketchPicker
                   color={canvasColor}
                   onChangeComplete={handleColorChange}
