@@ -36,7 +36,11 @@ import Image from "next/image";
 import { useCanvasStore } from "@/store/useCanvasStore";
 
 export default function UtilitySidebar({ onExport, onFileUpload }) {
-  const [canvasColor, setCanvasColor] = useState("#FFFFFF");
+  const canvas = useCanvasStore((state) => state.canvas);
+
+  const [canvasColor, setCanvasColor] = useState(
+    canvas?.backgroundColor || "#FBFBFC"
+  );
   const [theme, setTheme] = useState("system"); // Tracks selected theme mode
 
   const handleColorChange = (color) => {
@@ -44,7 +48,6 @@ export default function UtilitySidebar({ onExport, onFileUpload }) {
   };
   const [showColorPicker, setShowColorPicker] = useState(false);
 
-  const canvas = useCanvasStore((state) => state.canvas);
   useEffect(() => {
     canvas?.set({
       backgroundColor: canvasColor,
@@ -121,28 +124,24 @@ export default function UtilitySidebar({ onExport, onFileUpload }) {
                 <Paintbrush className="mr-2" /> Select Color
               </Button>
             </PopoverTrigger>
-            <PopoverContent>
-              {/* <SketchPicker color={canvasColor} onChange={handleColorChange} /> */}
-              <Input
-                id="canvasColor"
-                type="text"
-                value={canvasColor}
-                onClick={() => {
-                  return setShowColorPicker(!showColorPicker);
-                }}
-                readOnly
-                className="mt-1 block w-24 cursor-pointer"
-                style={{ backgroundColor: canvasColor }}
-              />
-              {showColorPicker && (
-                <div>
-                  <SketchPicker
-                    color={canvasColor}
-                    onChangeComplete={handleColorChange}
-                  />
-                </div>
-              )}
-            </PopoverContent>
+
+            <Input
+              id="canvasColor"
+              type="text"
+              // value={canvasColor}
+              onClick={() => setShowColorPicker(!showColorPicker)}
+              readOnly
+              className="w-52 cursor-pointer -mt-10 opacity-0"
+              style={{ backgroundColor: canvasColor }}
+            />
+            {showColorPicker && (
+              <div>
+                <SketchPicker
+                  color={canvasColor}
+                  onChangeComplete={handleColorChange}
+                />
+              </div>
+            )}
           </Popover>
         </div>
         {/* Export Options */}
