@@ -100,7 +100,7 @@ export default function UtilitySidebar({ onExport }) {
       <SheetTrigger>
         <AlignJustify className="w-8 h-8 cursor-pointer hover:text-blue-500 transition-colors duration-200 dark:text-gray-900 " />
       </SheetTrigger>
-      <SheetContent className="w-[192px] h-auto sm:w-[240px] p-4 bg-white dark:bg-gray-900 text-gray-800 dark:text-white pt-4 my-[9px] mx-2 rounded-xl">
+      <SheetContent className="w-[192px] top-20 h-4/5 sm:w-[240px] p-4 bg-white dark:bg-gray-900 text-gray-800 dark:text-white pt-4 my-[9px] mx-7 rounded-xl">
         <SheetHeader>
           <SheetTitle className="text-xl font-bold text-center mb-4 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
             App Utilities
@@ -141,7 +141,7 @@ export default function UtilitySidebar({ onExport }) {
         </div>
 
         {/* Canvas Color Picker */}
-        <div className="mb-6">
+        <div className="mb-6 ">
           <h3 className="text-sm font-semibold mb-2">Canvas Color</h3>
           <Popover>
             <PopoverTrigger asChild>
@@ -156,24 +156,24 @@ export default function UtilitySidebar({ onExport }) {
             <Input
               id="canvasColor"
               type="text"
-              // value={canvasColor}
               onClick={() => setShowColorPicker(!showColorPicker)}
               readOnly
               className="w-52 cursor-pointer -mt-10 opacity-0"
               style={{ backgroundColor: canvasColor }}
             />
             {showColorPicker && (
-              <div>
+              <div className="absolute ">
                 <SketchPicker
                   color={canvasColor}
                   onChangeComplete={handleColorChange}
+                  style={{}}
                 />
               </div>
             )}
           </Popover>
         </div>
         {/* Export Options */}
-        <div className="mb-6">
+        <div className="mb-6 z-0">
           <h3 className="text-sm font-semibold mb-2">Export</h3>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
