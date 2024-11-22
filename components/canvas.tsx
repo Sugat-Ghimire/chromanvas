@@ -14,7 +14,7 @@ import { drawLine } from "@/lib/canvas/line";
 import { drawText } from "@/lib/canvas/text";
 import { drawTriangle } from "@/lib/canvas/triangle";
 import SideSheet from "./canvas/sideSheet";
-//the main canvas page
+
 const CanvasPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
@@ -226,7 +226,7 @@ const CanvasPage = () => {
 
   return (
     <div className="flex-col relative">
-      <div className="relative z-30 mx-6 ">
+      <div className="relative z-30 mx-3 ">
         <Header fileInputRef={fileInputRef} />
       </div>
 

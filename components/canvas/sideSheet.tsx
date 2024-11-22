@@ -37,6 +37,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Image from "next/image";
 import { useCanvasStore } from "@/store/useCanvasStore";
 import useImageStore from "@/store/useImageStore";
+import ExportCanvas from "./exportComponent";
 
 export default function UtilitySidebar({ onExport }) {
   const canvas = useCanvasStore((state) => state.canvas);
@@ -101,11 +102,13 @@ export default function UtilitySidebar({ onExport }) {
     <Sheet open={isSheetOpen} onOpenChange={(open) => setIsSheetOpen(open)}>
       <SheetTrigger>
         <div className="relative w-8 h-8">
+          {/* AlignJustify Icon */}
           <AlignJustify
             className={`absolute w-8 h-8 cursor-pointer hover:text-blue-500 transition-all duration-300 dark:text-gray-900 ${
               isSheetOpen ? "opacity-0 scale-75" : "opacity-100 scale-100"
             }`}
           />
+          {/* X Icon */}
           <X
             className={`absolute w-8 h-8 cursor-pointer hover:text-blue-500 transition-all duration-300 dark:text-gray-900 ${
               isSheetOpen ? "opacity-100 scale-100" : "opacity-0 scale-75"
@@ -188,29 +191,8 @@ export default function UtilitySidebar({ onExport }) {
         </div>
         {/* Export Options */}
         <div className="mb-6 z-0">
-          <h3 className="text-sm font-semibold mb-2">Export</h3>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="secondary"
-                className="w-full flex items-center justify-between"
-              >
-                <Download className="mr-2" /> Export
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {["PNG", "JPEG", "PDF", "WebP"].map((format) => (
-                <DropdownMenuItem
-                  key={format}
-                  onClick={() => onExport(format.toLowerCase())}
-                >
-                  {format}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ExportCanvas />
         </div>
-
         {/* File Upload */}
         <div className="mb-6">
           <h3 className="text-sm font-semibold mb-2">Upload Image</h3>
