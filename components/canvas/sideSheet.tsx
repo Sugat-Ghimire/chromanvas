@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { fabric } from "fabric";
+
 import {
   Sheet,
   SheetContent,
@@ -34,8 +36,9 @@ import { SketchPicker } from "react-color";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Image from "next/image";
 import { useCanvasStore } from "@/store/useCanvasStore";
+import useImageStore from "@/store/useImageStore";
 
-export default function UtilitySidebar({ onExport, onFileUpload }) {
+export default function UtilitySidebar({ onExport }) {
   const canvas = useCanvasStore((state) => state.canvas);
 
   const [canvasColor, setCanvasColor] = useState(
@@ -47,6 +50,7 @@ export default function UtilitySidebar({ onExport, onFileUpload }) {
     setCanvasColor(color.hex);
   };
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const setImageStore = useImageStore((state: any) => state.setImageStore);
 
   useEffect(() => {
     canvas?.set({
@@ -66,7 +70,31 @@ export default function UtilitySidebar({ onExport, onFileUpload }) {
       // System default logic can be applied here if needed
     }
   };
+  const onFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (f) => {
+        const data = f.target?.result as string;
+        fabric.Image.fromURL(data, (img) => {
+          img.set({
+            left: Math.random() * 400,
+            top: Math.random() * 400,
+            angle: 0,
+            padding: 0,
+            cornerSize: 10,
+          });
+          img.scaleToWidth(300);
+          img.scaleToHeight(300);
 
+          setImageStore(img);
+          canvas?.add(img);
+          canvas?.setActiveObject(img);
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   return (
     <Sheet>
       <SheetTrigger>
@@ -171,7 +199,7 @@ export default function UtilitySidebar({ onExport, onFileUpload }) {
 
         {/* File Upload */}
         <div className="mb-6">
-          <h3 className="text-sm font-semibold mb-2">Upload File</h3>
+          <h3 className="text-sm font-semibold mb-2">Upload Image</h3>
           <label className="flex items-center w-full cursor-pointer">
             <File className="mr-2 text-gray-500 dark:text-white" />
             <div className="w-48 h-10 text-sm p-1 flex justify-center items-center gap-3 border border-slate-200 rounded-md text-gray-900 dark:text-gray-300">
