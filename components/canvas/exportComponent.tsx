@@ -17,15 +17,15 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Loader2, Download } from "lucide-react";
 import { useCanvasStore } from "@/store/useCanvasStore";
-
+import { useToast } from "@/hooks/use-toast";
 import jsPDF from "jspdf";
 
 export default function ExportCanvas() {
   const canvas = useCanvasStore((state: any) => state.canvas);
-
+  const { toast } = useToast();
   const [format, setFormat] = useState<string | null>(null);
   const [resolution, setResolution] = useState<string | null>("hd");
-  const [includeBackground, setIncludeBackground] = useState(false);
+  const [includeBackground, setIncludeBackground] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const handleExport = async () => {
@@ -33,9 +33,7 @@ export default function ExportCanvas() {
       alert("Canvas is not initialized!");
       return;
     }
-
     if (!format) {
-      alert("Please select a file format!");
       return;
     }
     setLoading(true);
@@ -164,6 +162,7 @@ export default function ExportCanvas() {
           <div className="flex items-center gap-3 mt-6">
             <Switch
               id="background-toggle"
+              defaultChecked
               onCheckedChange={setIncludeBackground}
             />
             <label
@@ -177,7 +176,16 @@ export default function ExportCanvas() {
           <div className="mt-6">
             <Button
               className="w-full flex items-center justify-center gap-2"
-              onClick={() => handleExport()}
+              onClick={() => {
+                handleExport();
+                if (!format) {
+                  toast({
+                    title: "Error : ",
+                    description: "Please select a file format!",
+                  });
+                }
+                setFormat(null);
+              }}
               disabled={loading}
             >
               {loading ? <Loader2 className="animate-spin" /> : <Download />}
