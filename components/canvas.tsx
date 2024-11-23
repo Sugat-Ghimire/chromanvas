@@ -222,7 +222,6 @@ const CanvasPage = () => {
       }
     };
   }, [canvas, drawingMode]);
-  console.log(canvas?.getActiveObject()?.type);
 
   return (
     <div className="flex-col relative">
