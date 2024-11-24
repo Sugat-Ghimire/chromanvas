@@ -45,7 +45,7 @@ export default function UtilitySidebar({ onExport }) {
   const [canvasColor, setCanvasColor] = useState(
     canvas?.backgroundColor || "#FBFBFC"
   );
-  const [theme, setTheme] = useState("system");
+  const [theme, setTheme] = useState("");
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const setImageStore = useImageStore((state: any) => state.setImageStore);
@@ -60,6 +60,7 @@ export default function UtilitySidebar({ onExport }) {
     });
     canvas?.renderAll();
   }, [canvasColor, canvas]);
+  console.log(theme);
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
@@ -67,8 +68,16 @@ export default function UtilitySidebar({ onExport }) {
       document.documentElement.classList.add("dark");
     } else if (newTheme === "light") {
       document.documentElement.classList.remove("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+    } else if (newTheme === "system") {
+      const isDarkMode = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      document.documentElement.classList.toggle("dark", isDarkMode);
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (event) => {
+          document.documentElement.classList.toggle("dark", event.matches);
+        });
     }
   };
 
@@ -86,6 +95,7 @@ export default function UtilitySidebar({ onExport }) {
             padding: 0,
             cornerSize: 10,
           });
+
           img.scaleToWidth(300);
           img.scaleToHeight(300);
 
