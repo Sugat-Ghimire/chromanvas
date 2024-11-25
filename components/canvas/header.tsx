@@ -11,6 +11,7 @@ import {
   Type,
   Hand,
   Slash,
+  Eraser,
 } from "lucide-react";
 import { useCanvasStore, useDrawingModeStore } from "@/store/useCanvasStore";
 import { useEffect, useState } from "react";
@@ -180,7 +181,15 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
           <CircleIcon className="w-5 h-5" />
           <span className="sr-only">Circle</span>
         </Button>
-
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => handleShapeIconClick("eraser")}
+          className={drawingMode === "erasor" ? "bg-blue-500 text-white" : ""}
+        >
+          <Eraser />
+          <span className="sr-only">Eraser</span>
+        </Button>
         <Button
           variant="ghost"
           size="icon"
