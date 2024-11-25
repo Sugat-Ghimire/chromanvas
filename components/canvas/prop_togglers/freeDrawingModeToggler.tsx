@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { SketchPicker } from "react-color";
 import { fabric } from "fabric";
-import { useCanvasStore, useDrawingModeStore } from "@/store/useCanvasStore";
+import { useCanvasStore } from "@/store/useCanvasStore";
 import { Slider } from "@/components/ui/slider";
 import {
   Select,
@@ -12,205 +12,196 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 export default function FreeDrawingModeToggler() {
   const canvas = useCanvasStore((state) => state.canvas);
-  const setCanvas = useCanvasStore((state) => state.setCanvas);
-  const activeObject = canvas.getActiveObject();
 
-  const [x, setX] = useState(parseInt(activeObject?.left) || 0);
-  const [y, setY] = useState(parseInt(activeObject?.top) || 0);
-  const [width, setWidth] = useState(activeObject?.scaleX * 100 || 33);
-  const [height, setHeight] = useState(activeObject?.scaleY * 100 || 33);
-  const [opacity, setOpacity] = useState(activeObject?.opacity || 1);
-  const [angle, setAngle] = useState(activeObject?.angle || 0);
-  const [strokeWidth, setStrokeWidth] = useState(
-    activeObject?.strokeWidth || 1
-  );
+  const [brushType, setBrushType] = useState("PencilBrush");
+  const [brushColor, setBrushColor] = useState("#eeaeae");
+  const [brushWidth, setBrushWidth] = useState(5);
+  const [brushOpacity, setBrushOpacity] = useState(1);
 
-  const [color, setColor] = useState(activeObject?.stroke || "#7c6a6a");
+  const [shadowColor, setShadowColor] = useState("#ee7575");
+  const [shadowBlur, setShadowBlur] = useState(10);
+  const [shadowOffsetX, setShadowOffsetX] = useState(2);
+  const [shadowOffsetY, setShadowOffsetY] = useState(2);
 
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const [strokeLineCap, setStrokeLineCap] = useState(
-    activeObject?.strokeLineCap || "round"
-  );
-
-  const handleStrokeLineCap = (value) => {
-    return setStrokeLineCap(value);
+  const [showBrushColorPicker, setShowBrushColorPicker] = useState(false);
+  const [showShadowColorPicker, setShowShadowColorPicker] = useState(false);
+  const handleBrushColorChange = (color) => {
+    setBrushColor(color.hex);
   };
-  const handleColorChange = (color: any) => setColor(color.hex);
+  const handleShadowColorChange = (color) => {
+    setShadowColor(color.hex);
+  };
   useEffect(() => {
-    if (!activeObject) return;
-    activeObject.set({
-      left: x,
-      top: y,
-      opacity,
-      strokeWidth,
-      scaleX: width / 100,
-      scaleY: height / 100,
-      stroke: color,
-      strokeLineCap: strokeLineCap,
-      angle: angle,
-    });
+    if (!canvas) return;
 
-    activeObject.setCoords();
-    canvas.renderAll();
-  }, [x, y, width, height, opacity, color, angle, strokeWidth, strokeLineCap]);
+    const rgbaColor = `rgba(${parseInt(brushColor.slice(1, 3), 16)}, ${parseInt(
+      brushColor.slice(3, 5),
+      16
+    )}, ${parseInt(brushColor.slice(5, 7), 16)}, ${brushOpacity})`;
+
+    const brush = new fabric[brushType](canvas);
+    brush.color = rgbaColor;
+    brush.width = brushWidth;
+    brush.shadow = new fabric.Shadow({
+      color: shadowColor,
+      blur: shadowBlur,
+      offsetX: shadowOffsetX,
+      offsetY: shadowOffsetY,
+    });
+    canvas.freeDrawingBrush = brush;
+  }, [
+    canvas,
+    brushType,
+    brushColor,
+    brushWidth,
+    brushOpacity,
+    shadowColor,
+    shadowBlur,
+    shadowOffsetX,
+    shadowOffsetY,
+  ]);
+
   return (
     <div className="absolute top-24 left-2 z-20 w-56">
-      <div className="z-10 flex flex-col bg-muted h-[550px] w-60 rounded-2xl opacity-95 drop-shadow-lg h-55">
-        <div className="p-4 flex flex-col gap-4 h-13">
+      <div className="z-10 flex flex-col bg-muted h-[550px] w-60 rounded-2xl opacity-95 drop-shadow-lg">
+        <div className="p-4 flex flex-col gap-4">
           <h2 className="text-lg font-semibold">Design</h2>
-          <div className="h-[1px] bg-gray-300 my-0 w-full -mt-2"></div>{" "}
-          {/* Thin line */}
+          <div className="h-[1px] bg-gray-300 w-full -mt-2"></div>
         </div>
+
         <div className="flex bg-muted">
-          <aside className="w-64 border-r p-4">
-            <div className="space-y-3">
-              <div className="flex gap-2">
-                <div>
-                  <label
-                    htmlFor="x"
-                    className="block text-sm font-medium text-foreground ml-1"
-                  >
-                    X-Axis
-                  </label>
-                  <Input
-                    id="x"
-                    type="number"
-                    value={x}
-                    onChange={(e) => setX(parseInt(e.target.value))}
-                    className="mt-1 block w-24"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="y"
-                    className="block text-sm font-medium text-foreground ml-1"
-                  >
-                    Y-Axis
-                  </label>
-                  <Input
-                    id="y"
-                    type="number"
-                    value={y}
-                    onChange={(e) => setY(parseInt(e.target.value))}
-                    className="mt-1 block w-24"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <div>
-                  <label
-                    htmlFor="width"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Width
-                  </label>
-                  <Input
-                    id="width"
-                    type="number"
-                    value={width}
-                    onChange={(e) => setWidth(parseInt(e.target.value))}
-                    className="mt-1 block w-24"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="strokeWidth"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    strokeWidth
-                  </label>
-
-                  <Input
-                    id="strokeWidth"
-                    type="number"
-                    value={strokeWidth}
-                    onChange={(e) => setStrokeWidth(parseInt(e.target.value))}
-                    className="mt-1 block w-24"
-                    min={0}
-                    max={100}
-                  />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <div>
-                  <label
-                    htmlFor="angle"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Angle
-                  </label>
-                  <Input
-                    id="angle"
-                    type="number"
-                    value={angle}
-                    onChange={(e) => setAngle(parseInt(e.target.value))}
-                    className="mt-1 block w-24"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="Color"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Color
-                  </label>
-                  <Input
-                    id="color"
-                    type="text"
-                    value={color}
-                    onClick={() => setShowColorPicker(!showColorPicker)}
-                    readOnly
-                    className="mt-1 block w-24 cursor-pointer"
-                    style={{ backgroundColor: color }}
-                  />
-                  {showColorPicker && (
-                    <div
-                      className="absolute z-10 mt-2 block w-8 cursor-pointer"
-                      style={{
-                        top: 130,
-                        right: 19,
-                      }}
-                    >
-                      <SketchPicker
-                        color={color}
-                        onChangeComplete={handleColorChange}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-2">{/** */}</div>
-              <div className="pl-1 pt-1">
-                <label
-                  htmlFor="opacity"
-                  className="block text-sm font-medium text-foreground pb-1"
-                >
-                  Opacity
-                </label>
-                <Slider
-                  id="opacity"
-                  defaultValue={[opacity]}
-                  max={1}
-                  step={0.01}
-                  value={[opacity]}
-                  onValueChange={(value) => setOpacity(value[0])}
-                />
-              </div>
-              <div className="pt-3">
-                <Select onValueChange={handleStrokeLineCap}>
+          <aside className="w-64 border-r p-4 ">
+            <div className="space-y-4">
+              <div>
+                <Select onValueChange={setBrushType}>
                   <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder="strokeLineCap " />
+                    <SelectValue placeholder="Select Brush" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="butt">Butt</SelectItem>
-                    <SelectItem value="round">Round</SelectItem>
-                    <SelectItem value="square">Square</SelectItem>
+                    <SelectItem value="PencilBrush">Pencil</SelectItem>
+                    <SelectItem value="CircleBrush">Circle</SelectItem>
+                    <SelectItem value="SprayBrush">Spray</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="flex gap-3">
+                <div>
+                  <label className="block text-sm font-medium">
+                    Brush Color
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      type="text"
+                      value={brushColor}
+                      onChange={(e) => setBrushColor(e.target.value)}
+                      onClick={() =>
+                        setShowBrushColorPicker(!showBrushColorPicker)
+                      }
+                      className="mt-1 block w-24  cursor-pointer"
+                      readOnly
+                      style={{
+                        backgroundColor: brushColor,
+                      }}
+                    />
+                  </div>
+                  {showBrushColorPicker && (
+                    <SketchPicker
+                      color={brushColor}
+                      onChangeComplete={handleBrushColorChange}
+                      className="absolute z-10 mt-2"
+                    />
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">
+                    Brush Width
+                  </label>
+                  <Input
+                    id="brushWidth"
+                    type="number"
+                    value={brushWidth}
+                    onChange={(e) => setBrushWidth(parseInt(e.target.value))}
+                    className="mt-1 block w-24 "
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium pb-2">
+                  Brush Opacity
+                </label>
+                <Slider
+                  defaultValue={[brushOpacity * 100]}
+                  min={1}
+                  max={100}
+                  value={[brushOpacity * 100]}
+                  onValueChange={(value) => setBrushOpacity(value[0] / 100)}
+                />
+              </div>
+              <div className="h-[1px] bg-gray-200 w-full my-4"></div>{" "}
+              {/* Divider */}
+              <div className="flex gap-3">
+                <div>
+                  <label className="block text-sm font-medium">
+                    Shadow Color
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      type="text"
+                      value={shadowColor}
+                      onChange={(e) => setBrushColor(e.target.value)}
+                      onClick={() =>
+                        setShowShadowColorPicker(!showShadowColorPicker)
+                      }
+                      className="mt-1 block w-24  cursor-pointer"
+                      readOnly
+                      style={{
+                        backgroundColor: shadowColor,
+                      }}
+                    />
+                  </div>
+                  {showShadowColorPicker && (
+                    <SketchPicker
+                      color={shadowColor}
+                      onChangeComplete={handleShadowColorChange}
+                      className="absolute z-10 mt-2"
+                    />
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium">
+                    Shadow Blur
+                  </label>
+                  <Input
+                    type="number"
+                    value={shadowBlur}
+                    onChange={(e) => setShadowBlur(parseInt(e.target.value))}
+                    className="mt-1 block w-24"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div>
+                  <label className="block text-sm font-medium">Offset X</label>
+                  <Input
+                    type="number"
+                    value={shadowOffsetX}
+                    onChange={(e) => setShadowOffsetX(parseInt(e.target.value))}
+                    className="mt-1 block w-24"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">Offset Y</label>
+                  <Input
+                    type="number"
+                    value={shadowOffsetY}
+                    onChange={(e) => setShadowOffsetY(parseInt(e.target.value))}
+                    className="mt-1 block w-24"
+                  />
+                </div>
               </div>
             </div>
           </aside>
