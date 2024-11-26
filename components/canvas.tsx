@@ -39,15 +39,20 @@ const CanvasPage = () => {
 
     setCanvas(canvasInstance);
     //functionality for showing and removing text over the canvas.
+    const canvasLeft =
+      document.querySelector("body")?.getBoundingClientRect()?.width! / 2;
+    const canvasTop =
+      document.querySelector("body")?.getBoundingClientRect()?.height! / 2;
+
     const instructionText = new fabric.IText(
       "Click and drag to draw on the canvas",
       {
-        left: canvasInstance.width! / 2,
-        top: canvasInstance.height! / 2,
+        left: canvasLeft,
+        top: canvasTop,
         fontSize: 20,
         fontFamily: "sans-serif",
         textAlign: "center",
-        originX: "right",
+        originX: "center",
         originY: "center",
         fill: "rgba(1, 0, 0, 0.8)",
         selectable: false,
@@ -197,7 +202,70 @@ const CanvasPage = () => {
       setDrawingMode(null);
     }
   };
+  //
+  //trying to add guide lines
+  let horizontalGuide, verticalGuide;
 
+  const addGuideLine = (type, position) => {
+    if (type === "horizontal" && !horizontalGuide) {
+      horizontalGuide = new fabric.Line([0, position, canvas.width, position], {
+        stroke: "blue",
+        strokeWidth: 1,
+        selectable: false,
+        evented: false,
+      });
+      canvas.add(horizontalGuide);
+    } else if (type === "vertical" && !verticalGuide) {
+      verticalGuide = new fabric.Line([position, 0, position, canvas.height], {
+        stroke: "blue",
+        strokeWidth: 1,
+        selectable: false,
+        evented: false,
+      });
+      canvas.add(verticalGuide);
+    }
+  };
+
+  const removeGuideLine = (type) => {
+    if (type === "horizontal" && horizontalGuide) {
+      canvas.remove(horizontalGuide);
+      horizontalGuide = null;
+    } else if (type === "vertical" && verticalGuide) {
+      canvas.remove(verticalGuide);
+      verticalGuide = null;
+    }
+  };
+
+  // Listen to object movement
+  canvas?.on("object:moving", (e) => {
+    const obj = e.target;
+
+    // Canvas center points
+    const centerX =
+      document.querySelector("body")?.getBoundingClientRect()?.width! / 2;
+    const centerY =
+      document.querySelector("body")?.getBoundingClientRect()?.height! / 2;
+
+    // Check alignment with canvas center
+    if (Math.abs(obj.left + obj.width / 2 - centerX) < 5) {
+      addGuideLine("vertical", centerX);
+    } else {
+      removeGuideLine("vertical");
+    }
+
+    if (Math.abs(obj.top + obj.height / 2 - centerY) < 5) {
+      addGuideLine("horizontal", centerY);
+    } else {
+      removeGuideLine("horizontal");
+    }
+  });
+
+  // Remove guide lines on mouse up
+  canvas?.on("mouse:up", () => {
+    removeGuideLine("horizontal");
+    removeGuideLine("vertical");
+  });
+  //
   canvas?.on("mouse:dblclick", () => {
     if (canvas?.getActiveObject()?.type == "textbox") {
       setDrawingMode("text");
