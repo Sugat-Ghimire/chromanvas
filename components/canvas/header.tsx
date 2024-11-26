@@ -20,6 +20,7 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
   const canvas = useCanvasStore((state: any) => state.canvas);
   const setCanvas = useCanvasStore((state: any) => state.setCanvas);
   const setImageStore = useImageStore((state: any) => state.setImageStore);
+  const [eraserEnabled, setEraserEnabled] = useState(false);
   const drawingMode = useDrawingModeStore((state: any) => state.drawingMode);
   const setDrawingMode = useDrawingModeStore(
     (state: any) => state.setDrawingMode
@@ -104,6 +105,7 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
       const reader = new FileReader();
       reader.onload = (f) => {
         const data = f.target?.result as string;
+
         fabric.Image.fromURL(data, (img) => {
           img.set({
             left: Math.random() * 400,
@@ -120,7 +122,9 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
           canvas?.setActiveObject(img);
         });
       };
+
       reader.readAsDataURL(file);
+      e.target.value = ""; // Reseting file input to allow re-uploading the same file
     }
   };
 
@@ -135,6 +139,71 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
       setFreeDrawing(false);
     }
   };
+  const handleEraserToggle = () => {
+    if (!canvas) return;
+    setEraserEnabled((prev) => !prev);
+
+    if (eraserEnabled) {
+      canvas.defaultCursor = "default";
+      canvas.off("mouse:down");
+      canvas.off("mouse:move");
+      canvas.off("mouse:up");
+      canvas.remove(canvas.__eraserCursor); // Removing eraser cursor
+      delete canvas.__eraserCursor;
+      delete canvas.__isEraserMode;
+      canvas.renderAll();
+    } else {
+      // Enabling eraser mode
+      setEraserEnabled(true);
+
+      // Hiding the default mouse cursor
+      canvas.defaultCursor = "none";
+
+      const eraserCursor = new fabric.Circle({
+        radius: 10,
+        fill: "rgba(255, 0, 0, 0.5)",
+        selectable: false,
+        evented: false,
+        originX: "center",
+        originY: "center",
+      });
+      canvas.__eraserCursor = eraserCursor;
+      canvas.add(eraserCursor);
+
+      let isMouseDown = false;
+
+      const onMouseDown = (event: fabric.IEvent) => {
+        if (event.e.button === 0) {
+          // Left mouse button
+          isMouseDown = true;
+          canvas.selection = false;
+        }
+      };
+      const onMouseMove = (event: fabric.IEvent) => {
+        const pointer = canvas.getPointer(event.e);
+        eraserCursor.set({ left: pointer.x, top: pointer.y });
+        eraserCursor.setCoords();
+        if (isMouseDown) {
+          const target = canvas.findTarget(event.e, false);
+          if (target && target !== canvas.backgroundImage) {
+            canvas.remove(target);
+          }
+        }
+
+        canvas.renderAll();
+      };
+
+      const onMouseUp = () => {
+        isMouseDown = false;
+        canvas.selection = true;
+      };
+
+      canvas.on("mouse:down", onMouseDown);
+      canvas.on("mouse:move", onMouseMove);
+      canvas.on("mouse:up", onMouseUp);
+    }
+  };
+
   return (
     <header
       className="opacity-95 z-10 absolute rounded-3xl drop-shadow-lg my-2 border-b border-muted p-4 flex items-center justify-between h-16 w-full
@@ -184,12 +253,13 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => handleShapeIconClick("eraser")}
-          className={drawingMode === "erasor" ? "bg-blue-500 text-white" : ""}
+          onClick={handleEraserToggle}
+          className={eraserEnabled ? "bg-blue-500 text-white" : ""}
         >
           <Eraser />
           <span className="sr-only">Eraser</span>
         </Button>
+
         <Button
           variant="ghost"
           size="icon"
