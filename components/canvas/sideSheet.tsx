@@ -87,6 +87,7 @@ export default function UtilitySidebar({ onExport }) {
       const reader = new FileReader();
       reader.onload = (f) => {
         const data = f.target?.result as string;
+
         fabric.Image.fromURL(data, (img) => {
           img.set({
             left: Math.random() * 400,
@@ -95,7 +96,6 @@ export default function UtilitySidebar({ onExport }) {
             padding: 0,
             cornerSize: 10,
           });
-
           img.scaleToWidth(300);
           img.scaleToHeight(300);
 
@@ -104,7 +104,9 @@ export default function UtilitySidebar({ onExport }) {
           canvas?.setActiveObject(img);
         });
       };
+
       reader.readAsDataURL(file);
+      e.target.value = ""; // Reseting file input to allow re-uploading the same file
     }
   };
 
