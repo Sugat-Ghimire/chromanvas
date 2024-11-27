@@ -60,7 +60,6 @@ export default function UtilitySidebar({ onExport }) {
     });
     canvas?.renderAll();
   }, [canvasColor, canvas]);
-  console.log(theme);
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);

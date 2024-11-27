@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import SideBar from "@/components/canvas/sidebar";
 import { fabric } from "fabric";
 import ZoomElement from "./canvas/zoomElement";
@@ -14,6 +14,7 @@ import { drawLine } from "@/lib/canvas/line";
 import { drawText } from "@/lib/canvas/text";
 import { drawTriangle } from "@/lib/canvas/triangle";
 import SideSheet from "./canvas/sideSheet";
+import { Copy, Paste } from "@/lib/canvas/copyPaste";
 
 const CanvasPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -275,6 +276,7 @@ const CanvasPage = () => {
     }
   });
 
+  //
   useEffect(() => {
     if (canvas) {
       canvas.on("mouse:down", handleMouseDown);
@@ -291,6 +293,26 @@ const CanvasPage = () => {
     };
   }, [canvas, drawingMode]);
 
+  //copy paste feature
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.ctrlKey && event.key === "c") {
+          if (canvas) Copy(canvas);
+          event.preventDefault();
+        } else if (event.ctrlKey && event.key === "v") {
+          if (canvas) Paste(canvas);
+          event.preventDefault();
+        }
+      };
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [canvas]);
+
+  //
   return (
     <div className="flex-col relative">
       <div className="relative z-30 mx-3 ">
