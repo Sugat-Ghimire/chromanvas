@@ -314,26 +314,38 @@ const CanvasPage = () => {
 
   //
   return (
-    <div className="flex-col relative">
-      <div className="relative z-30 mx-3 ">
-        <Header fileInputRef={fileInputRef} />
+    <div className="flex-col relative h-screen w-screen">
+      {/* Header */}
+      <div className="relative z-30 mx-3">
+        <Header />
       </div>
 
-      <div className="relative">
+      {/* Main Content */}
+      <div className="relative h-full w-full">
+        {/* Sidebar */}
         <div className="absolute top-15 left-5 z-20 w-56">
           <SideBar />
         </div>
 
-        <div className="absolute bottom-20 left-7 z-30 mb-2 ">
+        {/* Zoom Element */}
+        <div className="absolute bottom-20 left-7 z-30 mb-2">
           <ZoomElement />
         </div>
-        <div className="absolute bottom-2 right-1 z-30 mr-8 -mb-1 ">
+
+        {/* Side Sheet */}
+        <div className="absolute bottom-2 right-1 z-30 mr-8 -mb-1">
           <SideSheet />
         </div>
 
-        <div className="relative z-10">
-          <div ref={canvasWrapperRef}>
-            <canvas className="z-0" ref={canvasRef} width={1920} height={727} />
+        {/* Canvas */}
+        <div className="relative z-10 h-full w-full">
+          <div ref={canvasWrapperRef} className="h-full w-full">
+            <canvas
+              ref={canvasRef}
+              className="z-0 block h-full w-full"
+              width={1920}
+              height={727}
+            />
           </div>
         </div>
       </div>
