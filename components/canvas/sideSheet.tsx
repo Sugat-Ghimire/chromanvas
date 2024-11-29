@@ -38,6 +38,7 @@ import Image from "next/image";
 import { useCanvasStore } from "@/store/useCanvasStore";
 import useImageStore from "@/store/useImageStore";
 import ExportCanvas from "./exportComponent";
+import useImageUploader from "@/hooks/useImageUpload";
 
 export default function UtilitySidebar({ onExport }) {
   const canvas = useCanvasStore((state) => state.canvas);
@@ -49,6 +50,7 @@ export default function UtilitySidebar({ onExport }) {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const setImageStore = useImageStore((state: any) => state.setImageStore);
+  const { handleFileChange } = useImageUploader();
 
   const handleColorChange = (color) => {
     setCanvasColor(color.hex);
@@ -77,35 +79,6 @@ export default function UtilitySidebar({ onExport }) {
         .addEventListener("change", (event) => {
           document.documentElement.classList.toggle("dark", event.matches);
         });
-    }
-  };
-
-  const onFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (f) => {
-        const data = f.target?.result as string;
-
-        fabric.Image.fromURL(data, (img) => {
-          img.set({
-            left: Math.random() * 400,
-            top: Math.random() * 400,
-            angle: 0,
-            padding: 0,
-            cornerSize: 10,
-          });
-          img.scaleToWidth(300);
-          img.scaleToHeight(300);
-
-          setImageStore(img);
-          canvas?.add(img);
-          canvas?.setActiveObject(img);
-        });
-      };
-
-      reader.readAsDataURL(file);
-      e.target.value = ""; // Reseting file input to allow re-uploading the same file
     }
   };
 
@@ -213,7 +186,7 @@ export default function UtilitySidebar({ onExport }) {
               <span className="font-medium">Choose File </span>
               <span className="text-gray-700 dark:text-gray-200">No ...en</span>
             </div>
-            <Input type="file" onChange={onFileUpload} className="hidden" />
+            <Input type="file" onChange={handleFileChange} className="hidden" />
           </label>
         </div>
 

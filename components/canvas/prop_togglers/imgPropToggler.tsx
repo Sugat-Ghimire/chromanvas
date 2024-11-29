@@ -32,7 +32,6 @@ export default function ImagePropToggler() {
     (state: any) => state.setDrawingMode
   );
 
-  if (!activeObject) return;
   activeObject.set({
     left: x,
     top: y,
@@ -62,9 +61,18 @@ export default function ImagePropToggler() {
 
     activeObject.setCoords();
     canvas.renderAll();
-  }, [x, y, width, height, opacity, strokeWidth, borderColor, angle]);
-  console.log(activeObject?.width);
-  console.log(activeObject);
+  }, [
+    x,
+    y,
+    width,
+    height,
+    opacity,
+    strokeWidth,
+    borderColor,
+    angle,
+    activeObject,
+    canvas,
+  ]);
 
   return (
     <div className="absolute top-24 left-2 z-20 w-56">

@@ -16,6 +16,8 @@ import {
 import { useCanvasStore, useDrawingModeStore } from "@/store/useCanvasStore";
 import { useEffect, useState } from "react";
 import useImageStore from "@/store/useImageStore";
+import useImageUploader from "@/hooks/useImageUpload";
+
 export default function Header({ fileInputRef }: { fileInputRef: any }) {
   const canvas = useCanvasStore((state: any) => state.canvas);
   const setCanvas = useCanvasStore((state: any) => state.setCanvas);
@@ -28,7 +30,7 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
 
   // Panning state for toggling panning on/off
   const [panningEnabled, setPanningEnabled] = useState(false);
-
+  const { handleFileChange } = useImageUploader();
   const handleShapeIconClick = (shape: string) => {
     setDrawingMode(shape);
     if (canvas) {
@@ -98,35 +100,6 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
       canvas.off("mouse:up", onMouseUp);
     };
   }, [canvas, panningEnabled]); // Re-run effect when panningEnabled changes.
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (f) => {
-        const data = f.target?.result as string;
-
-        fabric.Image.fromURL(data, (img) => {
-          img.set({
-            left: Math.random() * 400,
-            top: Math.random() * 400,
-            angle: 0,
-            padding: 0,
-            cornerSize: 10,
-          });
-          img.scaleToWidth(300);
-          img.scaleToHeight(300);
-
-          setImageStore(img);
-          canvas?.add(img);
-          canvas?.setActiveObject(img);
-        });
-      };
-
-      reader.readAsDataURL(file);
-      e.target.value = ""; // Reseting file input to allow re-uploading the same file
-    }
-  };
 
   const [isFreeDrawing, setFreeDrawing] = useState(false);
 

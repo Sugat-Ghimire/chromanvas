@@ -10,11 +10,11 @@ import Header from "./canvas/header";
 import { drawRectangle } from "@/lib/canvas/rectangle";
 import { drawCircle } from "@/lib/canvas/circle";
 import { drawLine } from "@/lib/canvas/line";
-
 import { drawText } from "@/lib/canvas/text";
 import { drawTriangle } from "@/lib/canvas/triangle";
 import SideSheet from "./canvas/sideSheet";
 import { Copy, Paste } from "@/lib/canvas/copyPaste";
+import useImageUploader from "@/hooks/useImageUpload";
 
 const CanvasPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -32,6 +32,8 @@ const CanvasPage = () => {
 
   const incrementZoom = useZoomStore((state) => state.incrementZoom);
   const decrementZoom = useZoomStore((state) => state.decrementZoom);
+
+  const { handleFileChange } = useImageUploader();
 
   useEffect(() => {
     const canvasInstance = new fabric.Canvas(canvasRef.current, {
@@ -293,18 +295,25 @@ const CanvasPage = () => {
     };
   }, [canvas, drawingMode]);
 
-  //copy paste feature
+  //copy paste and ctrl + o image uploader
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.ctrlKey && event.key === "c") {
+        if (event.ctrlKey && event.key === "o") {
+          // Ctrl + O: Open image uploader
+          event.preventDefault();
+          fileInputRef.current?.click();
+        } else if (event.ctrlKey && event.key === "c") {
+          // Ctrl + C: Copy
           if (canvas) Copy(canvas);
           event.preventDefault();
         } else if (event.ctrlKey && event.key === "v") {
+          // Ctrl + V: Paste
           if (canvas) Paste(canvas);
           event.preventDefault();
         }
       };
+
       document.addEventListener("keydown", handleKeyDown);
       return () => {
         document.removeEventListener("keydown", handleKeyDown);
@@ -317,7 +326,7 @@ const CanvasPage = () => {
     <div className="flex-col relative h-screen w-screen">
       {/* Header */}
       <div className="relative z-30 mx-3">
-        <Header />
+        <Header fileInputRef={fileInputRef} />
       </div>
 
       {/* Main Content */}
