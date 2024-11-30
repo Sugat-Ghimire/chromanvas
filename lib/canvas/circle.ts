@@ -6,7 +6,7 @@ export function drawCircle(canvas: any, pointer: any) {
     top: pointer.y,
     radius: 0,
     fill: "#ece5e5",
-    strokeWidth: 1,
+    strokeWidth: 0,
     stroke: "#6b6868",
   });
   return shape;

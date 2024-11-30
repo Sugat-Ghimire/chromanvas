@@ -32,7 +32,9 @@ export default function TrianglePropToggler() {
   const [angle, setAngle] = useState(parseInt(activeObject?.angle) || 0);
 
   const [color, setColor] = useState(
-    activeObject?.gradient?.colorStops[0].color || "#ece5e5"
+    activeObject?.gradient?.colorStops[0].color ||
+      activeObject?.fill ||
+      "#ece5e5"
   );
   const [borderColor, setBorderColor] = useState(
     activeObject?.stroke || "#6b6868"

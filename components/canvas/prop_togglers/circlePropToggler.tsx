@@ -16,19 +16,19 @@ import { useCanvasStore, useDrawingModeStore } from "@/store/useCanvasStore";
 
 export default function CirclePropToggler() {
   const canvas = useCanvasStore((state) => state.canvas);
-  if (!(canvas?.getActiveObject()?.type == "circle")) return;
   const setCanvas = useCanvasStore((state) => state.setCanvas);
-
   const activeObject = canvas.getActiveObject();
   const [x, setX] = useState(parseInt(activeObject?.left) || 0);
   const [y, setY] = useState(parseInt(activeObject?.top) || 0);
   const [radius, setRadius] = useState(parseInt(activeObject?.radius) || 10);
   const [strokeWidth, setStrokeWidth] = useState(
-    parseInt(activeObject?.strokeWidth) || 1
+    parseInt(activeObject?.strokeWidth) || 0
   );
   const [opacity, setOpacity] = useState(activeObject?.opacity || 1);
   const [color, setColor] = useState(
-    activeObject?.gradient?.colorStops[0].color || "#ece5e5"
+    activeObject?.gradient?.colorStops[0].color ||
+      activeObject?.fill ||
+      "#ece5e5"
   );
   const [borderColor, setBorderColor] = useState(
     activeObject?.stroke || "#6b6868"
@@ -48,6 +48,7 @@ export default function CirclePropToggler() {
   const handleBorderColorChange = (color) => setBorderColor(color.hex);
   const handleGradientColorChange = (color) => setGradientColor(color.hex);
   const handleGradientTypeChange = (value) => setGradientType(value);
+  console.log(activeObject?.fill);
 
   const applyGradient = () => {
     if (!activeObject) return;
@@ -133,6 +134,8 @@ export default function CirclePropToggler() {
     gradientType,
     color,
     gradientColor,
+    activeObject,
+    canvas,
   ]);
 
   return (
