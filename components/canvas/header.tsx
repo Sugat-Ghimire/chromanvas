@@ -178,10 +178,7 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
   };
 
   return (
-    <header
-      className="opacity-95 z-10 absolute rounded-3xl drop-shadow-lg my-2 border-b border-muted p-4 flex items-center justify-between h-16 w-full
-  bg-gradient-to-r from-cyan-100 to-cyan-200 dark:from-gray-700 dark:to-gray-900"
-    >
+    <header className="opacity-95 z-10 absolute border-b border-muted p-4 flex items-center justify-between h-16 w-full bg-[#EBEDF3] dark:bg-gray-800">
       <h1 className="text-3xl font-bold">Chromanvas</h1>
       <div className="flex items-center gap-4">
         <Button

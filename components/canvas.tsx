@@ -37,7 +37,7 @@ const CanvasPage = () => {
 
   useEffect(() => {
     const canvasInstance = new fabric.Canvas(canvasRef.current, {
-      backgroundColor: "#FBFBFC",
+      backgroundColor: "#FFFFFF",
     });
 
     setCanvas(canvasInstance);
@@ -325,7 +325,7 @@ const CanvasPage = () => {
   return (
     <div className="flex-col relative h-screen w-screen">
       {/* Header */}
-      <div className="relative z-30 mx-3">
+      <div className="relative z-30 ">
         <Header fileInputRef={fileInputRef} />
       </div>
 
