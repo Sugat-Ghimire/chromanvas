@@ -41,6 +41,8 @@ const CanvasPage = () => {
     });
 
     setCanvas(canvasInstance);
+    drawGrid(canvasInstance);
+
     //functionality for showing and removing text over the canvas.
     const canvasLeft =
       document.querySelector("body")?.getBoundingClientRect()?.width! / 2;
@@ -277,7 +279,36 @@ const CanvasPage = () => {
       setDrawingMode(canvas?.getActiveObject()?.type);
     }
   });
+  //
+  const drawGrid = (canvasInstance: fabric.Canvas) => {
+    const gridSize = 20; // Adjust grid size as needed
+    const width = canvasInstance.getWidth();
+    const height = canvasInstance.getHeight();
 
+    for (let i = 0; i < width; i += gridSize) {
+      const verticalLine = new fabric.Line([i, 0, i, height], {
+        stroke: "#eaeaea",
+        strokeWidth: 1,
+        selectable: false,
+        evented: false,
+      });
+      canvasInstance.add(verticalLine);
+    }
+
+    for (let i = 0; i < height; i += gridSize) {
+      const horizontalLine = new fabric.Line([0, i, width, i], {
+        stroke: "#eaeaea",
+        strokeWidth: 1,
+        selectable: false,
+        evented: false,
+      });
+      canvasInstance.add(horizontalLine);
+    }
+
+    canvasInstance.sendToBack(...canvasInstance.getObjects());
+  };
+
+  //
   //
   useEffect(() => {
     if (canvas) {
