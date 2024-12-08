@@ -33,7 +33,7 @@ const CanvasPage = () => {
 
   const incrementZoom = useZoomStore((state) => state.incrementZoom);
   const decrementZoom = useZoomStore((state) => state.decrementZoom);
-
+  const [gridEnabled, setGridEnabled] = useState(false);
   const { handleFileChange } = useImageUploader();
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const CanvasPage = () => {
     });
 
     setCanvas(canvasInstance);
-    drawGrid(canvasInstance);
+    // drawGrid(canvasInstance);
 
     //functionality for showing and removing text over the canvas.
     const canvasLeft =
@@ -281,36 +281,77 @@ const CanvasPage = () => {
     }
   });
   //
-  const drawGrid = (canvasInstance: fabric.Canvas) => {
-    const gridSize = 20; // Adjust grid size as needed
-    const width = canvasInstance.getWidth();
-    const height = canvasInstance.getHeight();
+  const drawGrid = () => {
+    if (!canvas) return;
 
-    for (let i = 0; i < width; i += gridSize) {
-      const verticalLine = new fabric.Line([i, 0, i, height], {
-        stroke: "#eaeaea",
-        strokeWidth: 1,
+    const gridSize = 50; // grid size
+    const width = canvas.width!;
+    const height = canvas.height!;
+
+    // This clears existing grid lines
+    canvas.getObjects().forEach((obj) => {
+      if (obj.type === "line" && obj.isGridLine) {
+        canvas.remove(obj);
+      }
+    });
+
+    const gridLines: fabric.Line[] = [];
+
+    // Draws vertical lines
+    for (let i = 0; i <= width; i += gridSize) {
+      const line = new fabric.Line([i, 0, i, height], {
+        stroke: "#e0e0e0",
         selectable: false,
         evented: false,
       });
-      canvasInstance.add(verticalLine);
+      line.isGridLine = true; // Marks as grid line
+      gridLines.push(line);
     }
 
-    for (let i = 0; i < height; i += gridSize) {
-      const horizontalLine = new fabric.Line([0, i, width, i], {
-        stroke: "#eaeaea",
-        strokeWidth: 1,
+    // Draw horizontal lines
+    for (let i = 0; i <= height; i += gridSize) {
+      const line = new fabric.Line([0, i, width, i], {
+        stroke: "#e0e0e0",
         selectable: false,
         evented: false,
       });
-      canvasInstance.add(horizontalLine);
+      line.isGridLine = true; // Marks as grid line
+      gridLines.push(line);
     }
 
-    canvasInstance.sendToBack(...canvasInstance.getObjects());
+    //This adds grid lines to the canvas and send them to the back
+    gridLines.forEach((line) => {
+      canvas.add(line);
+      canvas.sendToBack(line); // Moves the line to the back
+    });
+
+    canvas.requestRenderAll();
   };
 
-  //
-  //
+  const removeGrid = () => {
+    if (!canvas) return;
+
+    //This only removes only grid lines
+    //So that other shapes, especially lines, remain unaffected.
+    canvas.getObjects().forEach((obj) => {
+      if (obj.type === "line" && obj.isGridLine) {
+        canvas.remove(obj);
+      }
+    });
+
+    canvas.requestRenderAll();
+  };
+
+  // Handle switch toggle
+  const handleToggle = (checked: boolean) => {
+    setGridEnabled(checked);
+    if (checked) {
+      drawGrid();
+    } else {
+      removeGrid();
+    }
+  };
+
   useEffect(() => {
     if (canvas) {
       canvas.on("mouse:down", handleMouseDown);
@@ -378,12 +419,16 @@ const CanvasPage = () => {
           <SideSheet />
         </div>
 
-        {/* Switch (Above Canvas, Left of SideSheet) */}
+        {/* Switch for grid lines */}
         <div className="absolute bottom-3.5 right-24 z-20 flex items-center space-x-2 ">
           <label htmlFor="canvasToggle" className="text-base text-gray-800">
             Grid Lines
           </label>
-          <Switch id="canvasToggle" />
+          <Switch
+            id="canvasToggle"
+            checked={gridEnabled}
+            onCheckedChange={handleToggle}
+          />
         </div>
 
         {/* Canvas */}
