@@ -17,6 +17,7 @@ import { useCanvasStore, useDrawingModeStore } from "@/store/useCanvasStore";
 import { useEffect, useState } from "react";
 import useImageStore from "@/store/useImageStore";
 import useImageUploader from "@/hooks/useImageUpload";
+import { quicksand } from "@/lib/fonts";
 
 export default function Header({ fileInputRef }: { fileInputRef: any }) {
   const canvas = useCanvasStore((state: any) => state.canvas);
@@ -179,10 +180,9 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
 
   return (
     <header
-      className="opacity-95 z-10 absolute border-b border-muted p-4 flex items-center justify-between h-16 w-full bg-[#EBEDF3] dark:bg-gray-800"
-      style={{ fontFamily: "Pacifico, cursive" }}
+      className={`${quicksand.className} opacity-95 z-10 absolute border-b border-muted p-4 flex items-center justify-between h-16 w-full bg-[#EBEDF3] dark:bg-gray-800`}
     >
-      <h1 className="text-3xl font-bold">Chromanvas</h1>
+      <h1 className="text-3xl font-bold ml-2 ">Chromanvas</h1>
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
