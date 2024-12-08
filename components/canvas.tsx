@@ -15,6 +15,7 @@ import { drawTriangle } from "@/lib/canvas/triangle";
 import SideSheet from "./canvas/sideSheet";
 import { Copy, Paste } from "@/lib/canvas/copyPaste";
 import useImageUploader from "@/hooks/useImageUpload";
+import { Switch } from "./ui/switch";
 
 const CanvasPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -356,7 +357,7 @@ const CanvasPage = () => {
   return (
     <div className="flex-col relative h-screen w-screen">
       {/* Header */}
-      <div className="relative z-30 ">
+      <div className="relative z-30">
         <Header fileInputRef={fileInputRef} />
       </div>
 
@@ -375,6 +376,14 @@ const CanvasPage = () => {
         {/* Side Sheet */}
         <div className="absolute bottom-2 right-1 z-30 mr-8 -mb-1">
           <SideSheet />
+        </div>
+
+        {/* Switch (Above Canvas, Left of SideSheet) */}
+        <div className="absolute bottom-3.5 right-24 z-20 flex items-center space-x-2 ">
+          <label htmlFor="canvasToggle" className="text-base text-gray-800">
+            Grid Lines
+          </label>
+          <Switch id="canvasToggle" />
         </div>
 
         {/* Canvas */}
