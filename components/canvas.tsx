@@ -42,7 +42,6 @@ const CanvasPage = () => {
     });
 
     setCanvas(canvasInstance);
-    // drawGrid(canvasInstance);
 
     //functionality for showing and removing text over the canvas.
     const canvasLeft =
@@ -284,73 +283,119 @@ const CanvasPage = () => {
   const drawGrid = () => {
     if (!canvas) return;
 
-    const gridSize = 50; // grid size
-    const width = canvas.width!;
-    const height = canvas.height!;
+    const gridSize = 40; // Size of each grid square
 
-    // This clears existing grid lines
-    canvas.getObjects().forEach((obj) => {
-      if (obj.type === "line" && obj.isGridLine) {
-        canvas.remove(obj);
-      }
-    });
-
-    const gridLines: fabric.Line[] = [];
-
-    // Draws vertical lines
-    for (let i = 0; i <= width; i += gridSize) {
-      const line = new fabric.Line([i, 0, i, height], {
-        stroke: "#e0e0e0",
-        selectable: false,
-        evented: false,
-      });
-      line.isGridLine = true; // Marks as grid line
-      gridLines.push(line);
+    // Remove previous grid group if it exists
+    const existingGridGroup = canvas
+      .getObjects()
+      .find((obj) => obj.isGridGroup);
+    if (existingGridGroup) {
+      canvas.remove(existingGridGroup);
     }
 
-    // Draw horizontal lines
-    for (let i = 0; i <= height; i += gridSize) {
-      const line = new fabric.Line([0, i, width, i], {
-        stroke: "#e0e0e0",
-        selectable: false,
-        evented: false,
-      });
-      line.isGridLine = true; // Marks as grid line
-      gridLines.push(line);
-    }
+    // Get zoom and viewport transformation
+    const zoom = canvas.getZoom();
+    const viewportTransform = canvas.viewportTransform || [1, 0, 0, 1, 0, 0];
 
-    //This adds grid lines to the canvas and send them to the back
-    gridLines.forEach((line) => {
-      canvas.add(line);
-      canvas.sendToBack(line); // Moves the line to the back
+    // Calculates visible area
+    const visibleWidth = canvas.getWidth() / zoom;
+    const visibleHeight = canvas.getHeight() / zoom;
+    const offsetX = -viewportTransform[4] / zoom;
+    const offsetY = -viewportTransform[5] / zoom;
+
+    // Calculates start and end points for the grid
+    const startX = Math.floor(offsetX / gridSize) * gridSize;
+    const startY = Math.floor(offsetY / gridSize) * gridSize;
+    const endX = offsetX + visibleWidth;
+    const endY = offsetY + visibleHeight;
+
+    // Creates a new group for the grid lines
+    const gridGroup = new fabric.Group([], {
+      selectable: false,
+      evented: false,
+      isGridGroup: true,
     });
 
+    // Draws vertical grid lines
+    for (let x = startX; x <= endX; x += gridSize) {
+      const line = new fabric.Line([x, startY, x, endY], {
+        stroke: "#d0d0d0",
+        strokeWidth: 0.5,
+        selectable: false,
+        evented: false,
+        isGridLine: true, // Custom property to identify grid lines
+      });
+      gridGroup.addWithUpdate(line);
+    }
+
+    // Draw horizontal grid lines
+    for (let y = startY; y <= endY; y += gridSize) {
+      const line = new fabric.Line([startX, y, endX, y], {
+        stroke: "#d0d0d0",
+        strokeWidth: 0.5,
+        selectable: false,
+        evented: false,
+        isGridLine: true,
+      });
+      gridGroup.addWithUpdate(line);
+    }
+
+    // Adds the grid group to the canvas and send it to the back
+    canvas.add(gridGroup);
+    canvas.sendToBack(gridGroup);
     canvas.requestRenderAll();
   };
 
+  // Utility function to debounce a given function
+  const debounce = (func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  // Debounced version of drawGrid
+  const debouncedDrawGrid = debounce(drawGrid, 100);
+
+  // Removes grid lines only (without affecting other objects)
   const removeGrid = () => {
     if (!canvas) return;
 
-    //This only removes only grid lines
-    //So that other shapes, especially lines, remain unaffected.
-    canvas.getObjects().forEach((obj) => {
-      if (obj.type === "line" && obj.isGridLine) {
-        canvas.remove(obj);
-      }
-    });
-
+    const existingGridGroup = canvas
+      .getObjects()
+      .find((obj) => obj.isGridGroup);
+    if (existingGridGroup) {
+      canvas.remove(existingGridGroup);
+    }
     canvas.requestRenderAll();
   };
 
-  // Handle switch toggle
+  // Handle toggle to enable/disable the grid
   const handleToggle = (checked: boolean) => {
-    setGridEnabled(checked);
+    setGridEnabled(checked); // Update state for grid toggle
     if (checked) {
-      drawGrid();
+      drawGrid(); // Draw grid when enabled
+      //event listeners for dynamic updates
+      canvas?.on("mouse:wheel", debouncedDrawGrid);
+      canvas?.on("mouse:down", () => {
+        canvas.on("mouse:move", debouncedDrawGrid);
+      });
+      canvas?.on("mouse:up", () => {
+        canvas.off("mouse:move", debouncedDrawGrid);
+      });
     } else {
-      removeGrid();
+      removeGrid(); // Remove grid when disabled
+      canvas?.off("mouse:wheel", debouncedDrawGrid);
+      canvas?.off("mouse:down");
+      canvas?.off("mouse:up");
     }
   };
+
+  // Initial grid draw based on toggle state
+  if (gridEnabled) {
+    drawGrid();
+  }
 
   useEffect(() => {
     if (canvas) {
