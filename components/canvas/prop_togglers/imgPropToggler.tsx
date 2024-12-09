@@ -20,7 +20,7 @@ export default function ImagePropToggler() {
     activeObject?.strokeWidth || 0
   );
   const [opacity, setOpacity] = useState(activeObject?.opacity || 1);
-  const [angle, setAngle] = useState(activeObject?.angle || 0);
+  const [angle, setAngle] = useState(parseInt(activeObject?.angle || 0));
   const [showBorderColorPicker, setShowBorderColorPicker] = useState(false);
   const [borderColor, setBorderColor] = useState(
     activeObject?.stroke || "#c09191"
