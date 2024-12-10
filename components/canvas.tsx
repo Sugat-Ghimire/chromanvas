@@ -281,9 +281,10 @@ const CanvasPage = () => {
   });
   //
   const drawGrid = () => {
-    if (!canvas) return;
+    // Only draw grid if grid is explicitly enabled
+    if (!canvas || !gridEnabled) return;
 
-    const gridSize = 40; // Size of each grid square
+    const gridSize = 40;
 
     // Remove previous grid group if it exists
     const existingGridGroup = canvas
@@ -371,24 +372,32 @@ const CanvasPage = () => {
     canvas.requestRenderAll();
   };
 
+  // Storing references to the event handlers to properly remove them
+  const gridEventHandlers = {
+    wheel: debouncedDrawGrid,
+    mouseDown: () => {
+      canvas?.on("mouse:move", debouncedDrawGrid);
+    },
+    mouseUp: () => {
+      canvas?.off("mouse:move", debouncedDrawGrid);
+    },
+  };
+
   // Handle toggle to enable/disable the grid
   const handleToggle = (checked: boolean) => {
     setGridEnabled(checked); // Update state for grid toggle
+
     if (checked) {
-      drawGrid(); // Draw grid when enabled
-      //event listeners for dynamic updates
-      canvas?.on("mouse:wheel", debouncedDrawGrid);
-      canvas?.on("mouse:down", () => {
-        canvas.on("mouse:move", debouncedDrawGrid);
-      });
-      canvas?.on("mouse:up", () => {
-        canvas.off("mouse:move", debouncedDrawGrid);
-      });
+      drawGrid(); // Draws grid when enabled
+      // event listeners for dynamic updates
+      canvas?.on("mouse:wheel", gridEventHandlers.wheel);
+      canvas?.on("mouse:down", gridEventHandlers.mouseDown);
+      canvas?.on("mouse:up", gridEventHandlers.mouseUp);
     } else {
       removeGrid(); // Remove grid when disabled
-      canvas?.off("mouse:wheel", debouncedDrawGrid);
-      canvas?.off("mouse:down");
-      canvas?.off("mouse:up");
+      canvas?.off("mouse:wheel", gridEventHandlers.wheel);
+      canvas?.off("mouse:down", gridEventHandlers.mouseDown);
+      canvas?.off("mouse:up", gridEventHandlers.mouseUp);
     }
   };
 
