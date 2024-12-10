@@ -16,6 +16,7 @@ import SideSheet from "./canvas/sideSheet";
 import { Copy, Paste } from "@/lib/canvas/copyPaste";
 import useImageUploader from "@/hooks/useImageUpload";
 import { Switch } from "./ui/switch";
+import { debounce } from "@/lib/debounce";
 
 const CanvasPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -345,15 +346,6 @@ const CanvasPage = () => {
     canvas.add(gridGroup);
     canvas.sendToBack(gridGroup);
     canvas.requestRenderAll();
-  };
-
-  // Utility function to debounce a given function
-  const debounce = (func: Function, delay: number) => {
-    let timeoutId: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func(...args), delay);
-    };
   };
 
   // Debounced version of drawGrid
