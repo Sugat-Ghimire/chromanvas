@@ -17,6 +17,7 @@ import { Copy, Paste } from "@/lib/canvas/copyPaste";
 import useImageUploader from "@/hooks/useImageUpload";
 import { Switch } from "./ui/switch";
 import { debounce } from "@/lib/debounce";
+import UndoRedo from "./canvas/undoRedo";
 
 const CanvasPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -487,6 +488,10 @@ const CanvasPage = () => {
               height={727}
             />
           </div>
+        </div>
+        {/** */}
+        <div className="absolute bottom-4 left-44 z-20 flex items-center space-x-2 ">
+          <UndoRedo />
         </div>
       </div>
     </div>

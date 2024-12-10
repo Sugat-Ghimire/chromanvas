@@ -31,10 +31,7 @@ const ZoomElement = () => {
     clearInterval(decrementRef.current);
   };
   return (
-    <div
-      id="zoomControl"
-      className="absolute w-32 h-56 ml-0.5 mt-7 drop-shadow-lg z-50 "
-    >
+    <div id="zoomControl" className="absolute w-32 h-56 ml-0.5 mt-7  z-50 ">
       <div className="z-10 sticky w-32 ">
         <div className="flex items-center justify-center rounded-lg bg-pink-100 p-2 dark:bg-gray-900">
           <button
