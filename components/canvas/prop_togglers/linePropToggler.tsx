@@ -38,38 +38,56 @@ export default function LinePropToggler() {
     return setStrokeLineCap(value);
   };
   const handleColorChange = (color: any) => setColor(color.hex);
-  if (!activeObject) return;
-  activeObject.set({
-    left: x,
-    top: y,
-    scaleX: width / 100,
-    scaleY: height / 100,
-    opacity: opacity,
-    stroke: color,
-    strokeWidth: strokeWidth,
-    strokeLineCap: strokeLineCap,
-    angle: angle,
-  });
-  //
-
-  //
   useEffect(() => {
     if (!activeObject) return;
+
+    setX(parseInt(activeObject?.left) || 0);
+    setY(parseInt(activeObject?.top) || 0);
+    setWidth(activeObject?.scaleX * 100 || 33);
+    setHeight(activeObject?.scaleY * 100 || 33);
+    setOpacity(activeObject?.opacity || 1);
+    setAngle(activeObject?.angle || 0);
+    setStrokeWidth(activeObject?.strokeWidth || 1);
+    setColor(activeObject?.stroke || "#7c6a6a");
+    setStrokeLineCap(activeObject?.strokeLineCap || "round");
+  }, [activeObject]);
+
+  // Update active object properties
+  useEffect(() => {
+    if (!activeObject) return;
+
     activeObject.set({
       left: x,
       top: y,
-      opacity,
-      strokeWidth,
       scaleX: width / 100,
       scaleY: height / 100,
+      opacity,
       stroke: color,
-      strokeLineCap: strokeLineCap,
-      angle: angle,
+      strokeWidth,
+      strokeLineCap,
+      angle,
     });
 
     activeObject.setCoords();
     canvas.renderAll();
-  }, [x, y, width, height, opacity, color, angle, strokeWidth, strokeLineCap]);
+  }, [
+    x,
+    y,
+    width,
+    height,
+    opacity,
+    color,
+    angle,
+    strokeWidth,
+    strokeLineCap,
+    activeObject,
+    canvas,
+  ]);
+
+  if (!activeObject) {
+    return null;
+  }
+
   return (
     <div className="absolute top-24 left-2 z-20 w-56">
       <div className="z-10 flex flex-col bg-muted h-[550px] w-60 rounded-2xl opacity-95 drop-shadow-lg h-55">
