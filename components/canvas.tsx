@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import SideBar from "@/components/canvas/sidebar";
 import { fabric } from "fabric";
 import ZoomElement from "./canvas/zoomElement";
@@ -18,6 +18,7 @@ import useImageUploader from "@/hooks/useImageUpload";
 import { Switch } from "./ui/switch";
 import { debounce } from "@/lib/debounce";
 import UndoRedo from "./canvas/undoRedo";
+import useCanvasHistory from "@/hooks/useCanvasHistory";
 
 const CanvasPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -37,14 +38,15 @@ const CanvasPage = () => {
   const decrementZoom = useZoomStore((state) => state.decrementZoom);
   const [gridEnabled, setGridEnabled] = useState(false);
   const { handleFileChange } = useImageUploader();
-
+  const { saveState } = useCanvasHistory(canvas);
   useEffect(() => {
     const canvasInstance = new fabric.Canvas(canvasRef.current, {
       backgroundColor: "#FFFFFF",
     });
-
     setCanvas(canvasInstance);
-
+    requestAnimationFrame(() => {
+      saveState();
+    });
     //functionality for showing and removing text over the canvas.
     const canvasLeft =
       document.querySelector("body")?.getBoundingClientRect()?.width! / 2;

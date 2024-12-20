@@ -48,7 +48,6 @@ export default function CirclePropToggler() {
   const handleBorderColorChange = (color) => setBorderColor(color.hex);
   const handleGradientColorChange = (color) => setGradientColor(color.hex);
   const handleGradientTypeChange = (value) => setGradientType(value);
-  console.log(activeObject?.fill);
 
   const applyGradient = () => {
     if (!activeObject) return;
