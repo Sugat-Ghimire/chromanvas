@@ -120,6 +120,11 @@ const CanvasPage = () => {
       )
         return;
       isMouseDown = true;
+      if (drawingMode === "circle") {
+        const pointer = canvas.getPointer(event.e);
+        const circle = drawCircle(canvas, pointer);
+        circle.initialPoint = { x: pointer.x, y: pointer.y };
+      }
       const pointer = canvas.getPointer(event.e);
       let shape = null;
 
@@ -174,13 +179,31 @@ const CanvasPage = () => {
           height: Math.abs(pointer.y - origin.top),
         });
         break;
-      case "circle":
-        const radius = Math.sqrt(
-          Math.pow(pointer.x - origin.left, 2) +
-            Math.pow(pointer.y - origin.top, 2)
-        );
-        shape.set({ radius });
+      case "circle": {
+        if (!shape.initialPoint) {
+          shape.initialPoint = {
+            x: shape.left, // Stores top-left point
+            y: shape.top,
+          };
+        }
+
+        // Calculates radius from top-left to cursor
+        const deltaX = pointer.x - shape.initialPoint.x;
+        const deltaY = pointer.y - shape.initialPoint.y;
+        const radius = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / 2;
+
+        // Applies constraints
+        const maxRadius = Math.min(canvas.width!, canvas.height!) / 3;
+        const constrainedRadius = Math.min(Math.max(radius, 1), maxRadius);
+
+        // Updates circle position keeping cursor at bottom-right edge
+        shape.set({
+          radius: constrainedRadius,
+          left: pointer.x - constrainedRadius * 2, // Position circle relative to cursor
+          top: pointer.y - constrainedRadius * 2,
+        });
         break;
+      }
       case "line":
         const line = shape;
         line.set({ x2: pointer.x, y2: pointer.y });
