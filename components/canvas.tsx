@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback, use } from "react";
 import SideBar from "@/components/canvas/sidebar";
 import { fabric } from "fabric";
 import ZoomElement from "./canvas/zoomElement";
@@ -37,6 +37,8 @@ const CanvasPage = () => {
   const incrementZoom = useZoomStore((state) => state.incrementZoom);
   const decrementZoom = useZoomStore((state) => state.decrementZoom);
   const [gridEnabled, setGridEnabled] = useState(false);
+  const [currentTool, setCurrentTool] = useState("select"); //for selection box
+
   const { handleFileChange } = useImageUploader();
   const { saveState } = useCanvasHistory(canvas);
   useEffect(() => {
@@ -465,6 +467,59 @@ const CanvasPage = () => {
       };
     }
   }, [canvas]);
+  //
+  // for handling selection box when the shapes are being drawn
+
+  const selectionSettings = {
+    selection: true,
+    selectionColor: "rgba(99, 101, 256, 0.3)",
+    selectionBorderColor: "#0066ff",
+    selectionLineWidth: 1,
+  };
+
+  const transparentSelectionSettings = {
+    selection: false,
+    selectionColor: "transparent",
+    selectionBorderColor: "transparent",
+    selectionLineWidth: 0,
+  };
+
+  useEffect(() => {
+    if (!canvas) return;
+
+    const handleMouseDown = (e: fabric.IEvent) => {
+      if (currentTool !== "select") {
+        canvas.set(transparentSelectionSettings);
+        canvas.selection = false;
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+      }
+    };
+
+    const handleMouseMove = (e: fabric.IEvent) => {
+      if (drawingMode) {
+        canvas.set(transparentSelectionSettings);
+        canvas.selection = false;
+        canvas.requestRenderAll();
+      }
+    };
+
+    if (currentTool !== "select" || drawingMode) {
+      canvas.set(transparentSelectionSettings);
+      canvas.selection = false;
+    } else {
+      canvas.set(selectionSettings);
+      canvas.selection = true;
+    }
+
+    canvas.on("mouse:down", handleMouseDown);
+    canvas.on("mouse:move", handleMouseMove);
+
+    return () => {
+      canvas.off("mouse:down", handleMouseDown);
+      canvas.off("mouse:move", handleMouseMove);
+    };
+  }, [canvas, currentTool, drawingMode]);
 
   //
   return (
