@@ -7,39 +7,64 @@ import { Button } from "@/components/ui/button";
 export default function Component() {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="bg-background border-b border-muted px-4 lg:px-6 h-14 flex items-center">
-        <Link
-          href="#"
-          className="flex items-center justify-center"
-          prefetch={false}
-        >
-          <BrushIcon className="h-6 w-6" />
-          <span className="sr-only">Drawing Canvas</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
+      <header className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 lg:px-8 h-16 flex items-center">
+        <div className="flex items-center justify-between w-full">
           <Link
             href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
+            className="flex items-center gap-2 text-gray-800 dark:text-gray-100 font-bold"
             prefetch={false}
           >
-            Features
+            <BrushIcon className="h-8 w-8 text-blue-600" />
+            <span className="text-lg">Chromanvas</span>
           </Link>
-          <Link
-            href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
-            prefetch={false}
+
+          <nav className="hidden md:flex items-center gap-6">
+            <Link
+              href="#"
+              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              prefetch={false}
+            >
+              Features
+            </Link>
+            <Link
+              href="#"
+              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              prefetch={false}
+            >
+              About
+            </Link>
+            <Link
+              href="#"
+              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              prefetch={false}
+            >
+              Contact
+            </Link>
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden flex items-center justify-center p-2 rounded-lg text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800"
+            aria-label="Open Menu"
           >
-            About
-          </Link>
-          <Link
-            href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
-            prefetch={false}
-          >
-            Contact
-          </Link>
-        </nav>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
       </header>
+
       <main className="flex-1">
         <section className="w-full pt-12 md:pt-24 lg:pt-32 border-y">
           <div className="container space-y-10 xl:space-y-16 px-4 md:px-6">
