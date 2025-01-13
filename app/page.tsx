@@ -161,31 +161,36 @@ export default function Component() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 border-t">
-          <div className="container grid items-center gap-4 px-4 md:px-6">
-            <div className="space-y-3">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+        <section className="w-full py-16 md:py-28 lg:py-36 bg-gray-50 dark:bg-gray-900 border-t">
+          <div className="container grid gap-8 px-6 md:px-12 lg:px-20 text-center md:text-left">
+            <div className="space-y-4">
+              <h2 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-gray-100 md:text-5xl lg:text-5xl">
                 Ready to Unleash Your Creativity?
               </h2>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Sign up today and start creating stunning designs with our
-                powerful Chromanvas.
+              <p className="max-w-xl mx-auto text-gray-600 dark:text-gray-300 md:mx-0 md:text-lg lg:text-xl">
+                Sign up today and start creating stunning designs with the
+                powerful tools of Chromanvas.
               </p>
             </div>
-            <div className="w-full max-w-sm space-y-2">
-              <form className="flex gap-2">
+            <div className="w-full max-w-lg mx-auto md:mx-0">
+              <form className="flex flex-col gap-4 sm:flex-row">
                 <Input
                   type="email"
                   placeholder="Enter your email"
-                  className="max-w-lg flex-1"
+                  className="w-full flex-1 rounded-lg border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
-                <Button type="submit">Get Started</Button>
+                <Button
+                  type="submit"
+                  className="w-full sm:w-auto px-6 py-3 rounded-lg text-white  focus:outline-none"
+                >
+                  Get Started
+                </Button>
               </form>
-              <p className="text-xs text-muted-foreground">
-                Sign up to unlock the full potential of our Chromanvas.{" "}
+              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                Sign up to unlock the full potential of Chromanvas.{" "}
                 <Link
                   href="#"
-                  className="underline underline-offset-2"
+                  className="text-blue-600 hover:underline dark:text-blue-400"
                   prefetch={false}
                 >
                   Terms &amp; Conditions
@@ -195,21 +200,21 @@ export default function Component() {
           </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">
-          &copy; 2024 Chromanvas. All rights reserved.
+      <footer className="flex flex-col gap-4 sm:flex-row items-center justify-between py-6 w-full px-4 md:px-8 border-t bg-gray-50 dark:bg-gray-900">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          &copy; {new Date().getFullYear()} Chromanvas. All rights reserved.
         </p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+        <nav className="flex gap-6">
           <Link
             href="#"
-            className="text-xs hover:underline underline-offset-4"
+            className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             prefetch={false}
           >
             Terms of Service
           </Link>
           <Link
             href="#"
-            className="text-xs hover:underline underline-offset-4"
+            className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             prefetch={false}
           >
             Privacy
