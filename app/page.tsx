@@ -101,8 +101,7 @@ export default function Component() {
               <canvas className="w-full h-[500px] bg-background rounded-t-xl" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <p className="text-muted-foreground text-center">
-                  Click and drag to draw shapes. Double-click to upload an
-                  image.
+                  Click and drag to draw shapes. CTRL+O to upload an image.
                 </p>
               </div>
             </div>
