@@ -15,27 +15,27 @@ export default function Component() {
             prefetch={false}
           >
             <BrushIcon className="h-8 w-8 text-blue-600" />
-            <span className="text-lg">Chromanvas</span>
+            <span className="text-xl">Chromanvas</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
             <Link
               href="#"
-              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               prefetch={false}
             >
               Features
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               prefetch={false}
             >
               About
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               prefetch={false}
             >
               Contact
@@ -70,7 +70,7 @@ export default function Component() {
           <div className="container space-y-10 xl:space-y-16 px-4 md:px-6">
             <div className="grid max-w-[1300px] mx-auto gap-4 px-4 sm:px-6 md:px-10 md:grid-cols-2 md:gap-16">
               <div>
-                <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
+                <h1 className="opacity-80 lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                   Unleash Your Creativity with Chromanvas
                 </h1>
               </div>
