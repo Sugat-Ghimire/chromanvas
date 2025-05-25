@@ -8,8 +8,8 @@ import useImageStore from "@/store/useImageStore";
 import { Slider } from "@/components/ui/slider";
 
 export default function ImagePropToggler() {
-  const canvas = useCanvasStore((state) => state.canvas);
-  const setCanvas = useCanvasStore((state) => state.setCanvas);
+  const canvas = useCanvasStore((state: any) => state.canvas);
+  const setCanvas = useCanvasStore((state: any) => state.setCanvas);
   const activeObject = canvas.getActiveObject();
   const [x, setX] = useState(parseInt(activeObject?.left) || 0);
   const [y, setY] = useState(parseInt(activeObject?.top) || 0);
@@ -27,7 +27,7 @@ export default function ImagePropToggler() {
   );
 
   const handleBorderColorChange = (color: any) => setBorderColor(color.hex);
-  const img = useImageStore((state) => state.image);
+  const img = useImageStore((state: any) => state.image);
   const setDrawingMode = useDrawingModeStore(
     (state: any) => state.setDrawingMode
   );
@@ -130,7 +130,7 @@ export default function ImagePropToggler() {
                     id="width"
                     type="number"
                     value={width}
-                    onChange={(e) => setWidth(e.target.value)}
+                    onChange={(e) => setWidth(Number(e.target.value))}
                     className="mt-1 block w-24"
                   />
                 </div>
@@ -145,7 +145,7 @@ export default function ImagePropToggler() {
                     id="height"
                     type="number"
                     value={height}
-                    onChange={(e) => setHeight(e.target.value)}
+                    onChange={(e) => setHeight(Number(e.target.value))}
                     className="mt-1 block w-24"
                   />
                 </div>

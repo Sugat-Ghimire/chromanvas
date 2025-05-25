@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 
 export default function FreeDrawingModeToggler() {
-  const canvas = useCanvasStore((state) => state.canvas);
+  const canvas = useCanvasStore((state: any) => state.canvas);
 
   const [brushType, setBrushType] = useState("PencilBrush");
   const [brushColor, setBrushColor] = useState("#eeaeae");
@@ -28,10 +28,10 @@ export default function FreeDrawingModeToggler() {
 
   const [showBrushColorPicker, setShowBrushColorPicker] = useState(false);
   const [showShadowColorPicker, setShowShadowColorPicker] = useState(false);
-  const handleBrushColorChange = (color) => {
+  const handleBrushColorChange = (color: any) => {
     setBrushColor(color.hex);
   };
-  const handleShadowColorChange = (color) => {
+  const handleShadowColorChange = (color: any) => {
     setShadowColor(color.hex);
   };
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function FreeDrawingModeToggler() {
       16
     )}, ${parseInt(brushColor.slice(5, 7), 16)}, ${brushOpacity})`;
 
-    const brush = new fabric[brushType](canvas);
+    const brush = new (fabric as any)[brushType](canvas);
     brush.color = rgbaColor;
     brush.width = brushWidth;
     brush.shadow = new fabric.Shadow({

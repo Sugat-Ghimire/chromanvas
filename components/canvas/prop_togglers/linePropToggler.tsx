@@ -13,8 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 export default function LinePropToggler() {
-  const canvas = useCanvasStore((state) => state.canvas);
-  const setCanvas = useCanvasStore((state) => state.setCanvas);
+  const canvas = useCanvasStore((state: any) => state.canvas);
+  const setCanvas = useCanvasStore((state: any) => state.setCanvas);
   const activeObject = canvas.getActiveObject();
 
   const [x, setX] = useState(parseInt(activeObject?.left) || 0);
@@ -34,7 +34,7 @@ export default function LinePropToggler() {
     activeObject?.strokeLineCap || "round"
   );
 
-  const handleStrokeLineCap = (value) => {
+  const handleStrokeLineCap = (value: any) => {
     return setStrokeLineCap(value);
   };
   const handleColorChange = (color: any) => setColor(color.hex);

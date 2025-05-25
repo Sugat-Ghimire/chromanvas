@@ -4,8 +4,8 @@ import useImageStore from "@/store/useImageStore";
 import { useCallback } from "react";
 
 const useImageUploader = () => {
-  const canvas = useCanvasStore((state) => state.canvas);
-  const setImageStore = useImageStore((state) => state.setImageStore);
+  const canvas = useCanvasStore((state: any) => state.canvas);
+  const setImageStore = useImageStore((state: any) => state.setImageStore);
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];

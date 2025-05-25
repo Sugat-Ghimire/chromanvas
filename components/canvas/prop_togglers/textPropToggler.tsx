@@ -10,8 +10,8 @@ import { SketchPicker } from "react-color";
 import { Slider } from "@/components/ui/slider";
 
 export default function TextPropToggler() {
-  const canvas = useCanvasStore((state) => state.canvas);
-  const setCanvas = useCanvasStore((state) => state.setCanvas);
+  const canvas = useCanvasStore((state: any) => state.canvas);
+  const setCanvas = useCanvasStore((state: any) => state.setCanvas);
   const activeObject = canvas.getActiveObject();
 
   const [x, setX] = useState(parseInt(activeObject?.left) || 0);
@@ -31,14 +31,14 @@ export default function TextPropToggler() {
   const [showHighlightColorPicker, setShowHighlightColorPicker] =
     useState(false);
 
-  const handleColorChange = (color) => {
+  const handleColorChange = (color: any) => {
     setColor(color.hex);
   };
-  const handleHighlightColorChange = (color) => {
+  const handleHighlightColorChange = (color: any) => {
     setHighlightColor(color.hex);
   };
   const [align, setAlign] = useState(activeObject?.textAlign || "left");
-  const handleTextAlignChange = (align) => {
+  const handleTextAlignChange = (align: string) => {
     setAlign(align);
   };
   useEffect(() => {

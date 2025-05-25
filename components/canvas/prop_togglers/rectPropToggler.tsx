@@ -15,9 +15,9 @@ import { useCanvasStore } from "@/store/useCanvasStore";
 import { Slider } from "@/components/ui/slider";
 
 export default function RectPropToggler() {
-  const canvas = useCanvasStore((state) => state.canvas);
+  const canvas = useCanvasStore((state: any) => state.canvas);
 
-  const setCanvas = useCanvasStore((state) => state.setCanvas);
+  const setCanvas = useCanvasStore((state: any) => state.setCanvas);
 
   const activeObject = canvas.getActiveObject();
   const [x, setX] = useState(parseInt(activeObject?.left) || 0);
@@ -53,7 +53,7 @@ export default function RectPropToggler() {
   const handleColorChange = (color: any) => setColor(color.hex);
   const handleBorderColorChange = (color: any) => setBorderColor(color.hex);
   const handleGradientColorChange = (color: any) => setGradientColor(color.hex);
-  const handleGradientTypeChange = (value) => setGradientType(value);
+  const handleGradientTypeChange = (value: any) => setGradientType(value);
   const applyGradient = () => {
     if (!activeObject) return;
 

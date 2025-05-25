@@ -10,7 +10,7 @@ const useDrawingModeStore = create((set) => ({
   drawingMode: "",
   prevMode: "",
   setDrawingMode: (mode: string | null) =>
-    set((state) => {
+    set((state: any) => {
       const prevMode = state.drawingMode;
       return { drawingMode: mode, prevMode: prevMode };
     }),

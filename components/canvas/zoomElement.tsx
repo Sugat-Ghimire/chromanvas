@@ -5,12 +5,13 @@ import useZoomStore from "@/store/useZoomStore";
 import { Plus, Minus } from "lucide-react";
 
 const ZoomElement = () => {
-  const zoom = useZoomStore((state) => state.zoom);
-  const setZoom = useZoomStore((state) => state.setZoom);
-  const incrementZoom = useZoomStore((state) => state.incrementZoom);
-  const decrementZoom = useZoomStore((state) => state.decrementZoom);
-  const incrementRef = useRef(null);
-  const decrementRef = useRef(null);
+  const zoom = useZoomStore((state: any) => state.zoom);
+  const setZoom = useZoomStore((state: any) => state.setZoom);
+  const incrementZoom = useZoomStore((state: any) => state.incrementZoom);
+  const decrementZoom = useZoomStore((state: any) => state.decrementZoom);
+  const incrementRef = useRef<NodeJS.Timeout | null>(null);
+  const decrementRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleMouseDownIncrement = () => {
     incrementRef.current = setInterval(() => {
       incrementZoom();
@@ -24,12 +25,26 @@ const ZoomElement = () => {
   };
 
   const clearIncrement = () => {
-    clearInterval(incrementRef.current);
+    if (incrementRef.current) {
+      clearInterval(incrementRef.current);
+      incrementRef.current = null;
+    }
   };
 
   const clearDecrement = () => {
-    clearInterval(decrementRef.current);
+    if (decrementRef.current) {
+      clearInterval(decrementRef.current);
+      decrementRef.current = null;
+    }
   };
+
+  // Cleans up intervals on unmount
+  useEffect(() => {
+    return () => {
+      clearIncrement();
+      clearDecrement();
+    };
+  }, []);
   return (
     <div id="zoomControl" className="absolute w-32 h-56 ml-0.5 mt-7  z-50 ">
       <div className="z-10 sticky w-32 ">

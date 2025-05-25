@@ -20,7 +20,9 @@ import { useDrawingModeStore } from "@/store/useCanvasStore";
 import { Divide } from "lucide-react";
 
 export default function SideBar() {
-  const drawingMode = useDrawingModeStore((state) => state.drawingMode);
+  const drawingMode = useDrawingModeStore(
+    (state: string | any) => state.drawingMode
+  );
 
   const dm = drawingMode;
 

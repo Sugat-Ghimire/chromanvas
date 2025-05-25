@@ -6,7 +6,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useCanvasStore } from "@/store/useCanvasStore";
 
 export function FontToggle() {
-  const canvas = useCanvasStore((state) => state.canvas);
+  const canvas = useCanvasStore((state: any) => state.canvas);
   const activeObject = canvas?.getActiveObject();
 
   const [isBold, setIsBold] = useState(activeObject?.fontWeight === "bold");
@@ -51,7 +51,7 @@ export function FontToggle() {
       <ToggleGroupItem
         value="underline"
         aria-label="Toggle underline"
-        onClick={() => setIsUnderline((prev) => !prev)}
+        onClick={() => setIsUnderline((prev: any) => !prev)}
         className={isUnderline ? "bg-gray-400 text-black" : ""}
       >
         <Underline className="h-4 w-4 mt-0.5" />

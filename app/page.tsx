@@ -249,7 +249,7 @@ export default function Component() {
   );
 }
 
-function BrushIcon(props) {
+function BrushIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

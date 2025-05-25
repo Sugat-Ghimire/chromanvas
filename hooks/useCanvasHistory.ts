@@ -1,7 +1,16 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { fabric } from "fabric";
 import debounce from "lodash/debounce";
-
+type FabricEventName =
+  | "object:added"
+  | "object:modified"
+  | "object:removed"
+  | "path:created"
+  | "object:skewing"
+  | "object:rotating"
+  | "object:scaling"
+  | "object:moved"
+  | "text:changed";
 const useCanvasHistory = (canvas: fabric.Canvas | null) => {
   const [history, setHistory] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -99,7 +108,7 @@ const useCanvasHistory = (canvas: fabric.Canvas | null) => {
   useEffect(() => {
     if (!canvas) return;
 
-    const events: (keyof fabric.IEvent)[] = [
+    const events: FabricEventName[] = [
       "object:added",
       "object:modified",
       "object:removed",
@@ -112,13 +121,13 @@ const useCanvasHistory = (canvas: fabric.Canvas | null) => {
     ];
 
     events.forEach((event) => {
-      canvas.on(event, debouncedSaveState);
+      canvas.on(event as keyof fabric.IEvent, debouncedSaveState);
     });
 
     return () => {
       debouncedSaveState.cancel();
       events.forEach((event) => {
-        canvas.off(event, debouncedSaveState);
+        canvas.off(event as keyof fabric.IEvent, debouncedSaveState);
       });
     };
   }, [canvas, debouncedSaveState]);

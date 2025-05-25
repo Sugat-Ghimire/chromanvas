@@ -64,7 +64,7 @@ const fonts = [
 ];
 
 export default function Combobox() {
-  const canvas = useCanvasStore((state) => state.canvas);
+  const canvas = useCanvasStore((state: any) => state.canvas);
   const activeObject = canvas?.getActiveObject();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(activeObject?.fontFamily || "");

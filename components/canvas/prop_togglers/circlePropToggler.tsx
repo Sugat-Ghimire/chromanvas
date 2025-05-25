@@ -15,8 +15,8 @@ import { Slider } from "@/components/ui/slider";
 import { useCanvasStore, useDrawingModeStore } from "@/store/useCanvasStore";
 
 export default function CirclePropToggler() {
-  const canvas = useCanvasStore((state) => state.canvas);
-  const setCanvas = useCanvasStore((state) => state.setCanvas);
+  const canvas = useCanvasStore((state: any) => state.canvas);
+  const setCanvas = useCanvasStore((state: any) => state.setCanvas);
   const activeObject = canvas.getActiveObject();
   const [x, setX] = useState(parseInt(activeObject?.left) || 0);
   const [y, setY] = useState(parseInt(activeObject?.top) || 0);
@@ -44,10 +44,10 @@ export default function CirclePropToggler() {
   const [showBorderColorPicker, setShowBorderColorPicker] = useState(false);
   const [showGradientColorPicker, setShowGradientColorPicker] = useState(false);
 
-  const handleColorChange = (color) => setColor(color.hex);
-  const handleBorderColorChange = (color) => setBorderColor(color.hex);
-  const handleGradientColorChange = (color) => setGradientColor(color.hex);
-  const handleGradientTypeChange = (value) => setGradientType(value);
+  const handleColorChange = (color: any) => setColor(color.hex);
+  const handleBorderColorChange = (color: any) => setBorderColor(color.hex);
+  const handleGradientColorChange = (color: any) => setGradientColor(color.hex);
+  const handleGradientTypeChange = (value: any) => setGradientType(value);
 
   const applyGradient = () => {
     if (!activeObject) return;

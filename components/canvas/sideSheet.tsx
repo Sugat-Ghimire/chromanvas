@@ -40,8 +40,8 @@ import useImageStore from "@/store/useImageStore";
 import ExportCanvas from "./exportComponent";
 import useImageUploader from "@/hooks/useImageUpload";
 
-export default function UtilitySidebar({ onExport }) {
-  const canvas = useCanvasStore((state) => state.canvas);
+export default function UtilitySidebar({ onExport }: { onExport: () => void }) {
+  const canvas = useCanvasStore((state: any) => state.canvas);
 
   const [canvasColor, setCanvasColor] = useState(
     canvas?.backgroundColor || "#FBFBFC"
@@ -52,7 +52,7 @@ export default function UtilitySidebar({ onExport }) {
   const setImageStore = useImageStore((state: any) => state.setImageStore);
   const { handleFileChange } = useImageUploader();
 
-  const handleColorChange = (color) => {
+  const handleColorChange = (color: any) => {
     setCanvasColor(color.hex);
   };
 
@@ -63,7 +63,7 @@ export default function UtilitySidebar({ onExport }) {
     canvas?.renderAll();
   }, [canvasColor, canvas]);
 
-  const handleThemeChange = (newTheme) => {
+  const handleThemeChange = (newTheme: any) => {
     setTheme(newTheme);
     if (newTheme === "dark") {
       document.documentElement.classList.add("dark");
@@ -167,7 +167,7 @@ export default function UtilitySidebar({ onExport }) {
                 <SketchPicker
                   color={canvasColor}
                   onChangeComplete={handleColorChange}
-                  style={{}}
+                  // style={{}}
                 />
               </div>
             )}

@@ -146,7 +146,7 @@ export default function Header({ fileInputRef }: { fileInputRef: any }) {
 
       let isMouseDown = false;
 
-      const onMouseDown = (event: fabric.IEvent) => {
+      const onMouseDown = (event: fabric.IEvent | any) => {
         if (event.e.button === 0) {
           // Left mouse button
           isMouseDown = true;
