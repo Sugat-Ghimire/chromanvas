@@ -2,8 +2,18 @@
 import React, { useRef, useEffect, useState, useCallback, use } from "react";
 import SideBar from "@/components/canvas/sidebar";
 import { fabric } from "fabric";
+import type { IGroupOptions } from "fabric/fabric-impl";
 import ZoomElement from "./canvas/zoomElement";
 import useZoomStore from "@/store/useZoomStore";
+
+declare module "fabric/fabric-impl" {
+  interface IGroupOptions {
+    isGridGroup?: boolean;
+  }
+  interface ILineOptions {
+    isGridLine?: boolean;
+  }
+}
 import Dropdown from "./canvas/dropdown";
 import { useCanvasStore, useDrawingModeStore } from "@/store/useCanvasStore";
 import Header from "./canvas/header";
@@ -24,18 +34,20 @@ const CanvasPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
 
-  const canvas = useCanvasStore((state) => state.canvas);
-  const setCanvas = useCanvasStore((state) => state.setCanvas);
+  const canvas = useCanvasStore((state: any) => state.canvas);
+  const setCanvas = useCanvasStore((state: any) => state.setCanvas);
 
-  const drawingMode = useDrawingModeStore((state) => state.drawingMode);
-  const prevMode = useDrawingModeStore((state) => state.prevMode);
-  const setDrawingMode = useDrawingModeStore((state) => state.setDrawingMode);
+  const drawingMode = useDrawingModeStore((state: any) => state.drawingMode);
+  const prevMode = useDrawingModeStore((state: any) => state.prevMode);
+  const setDrawingMode = useDrawingModeStore(
+    (state: any) => state.setDrawingMode
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const zoom = useZoomStore((state) => state.zoom);
+  const zoom = useZoomStore((state: any) => state.zoom);
 
-  const incrementZoom = useZoomStore((state) => state.incrementZoom);
-  const decrementZoom = useZoomStore((state) => state.decrementZoom);
+  const incrementZoom = useZoomStore((state: any) => state.incrementZoom);
+  const decrementZoom = useZoomStore((state: any) => state.decrementZoom);
   const [gridEnabled, setGridEnabled] = useState(false);
   const [currentTool, setCurrentTool] = useState("select"); //for selection box
 
@@ -82,7 +94,7 @@ const CanvasPage = () => {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Delete" && canvasInstance.getActiveObject()) {
-        canvasInstance.remove(canvasInstance.getActiveObject());
+        canvasInstance.remove(canvasInstance.getActiveObject()!);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -94,14 +106,16 @@ const CanvasPage = () => {
         zoomFactor > 0.9 ? incrementZoom() : decrementZoom();
       }
     };
-    canvasWrapperRef.current?.addEventListener("wheel", handleWheel);
+
+    const currentWrapper = canvasWrapperRef.current;
+    currentWrapper?.addEventListener("wheel", handleWheel);
 
     return () => {
       canvasInstance.dispose();
       window.removeEventListener("keydown", handleKeyDown);
-      canvasWrapperRef.current?.removeEventListener("wheel", handleWheel);
+      currentWrapper?.removeEventListener("wheel", handleWheel);
     };
-  }, []);
+  }, [decrementZoom, incrementZoom, saveState, setCanvas]);
 
   useEffect(() => {
     if (canvas) {
@@ -111,7 +125,7 @@ const CanvasPage = () => {
   }, [zoom, canvas]);
   let isMouseDown = false;
 
-  const handleMouseDown = (event) => {
+  const handleMouseDown = (event: fabric.IEvent) => {
     while (!canvas.getActiveObject()) {
       if (
         !drawingMode ||
@@ -124,7 +138,9 @@ const CanvasPage = () => {
       isMouseDown = true;
       if (drawingMode === "circle") {
         const pointer = canvas.getPointer(event.e);
-        const circle = drawCircle(canvas, pointer);
+        const circle = drawCircle(canvas, pointer) as fabric.Object & {
+          initialPoint?: { x: number; y: number };
+        };
         circle.initialPoint = { x: pointer.x, y: pointer.y };
       }
       const pointer = canvas.getPointer(event.e);
@@ -157,7 +173,7 @@ const CanvasPage = () => {
     }
   };
 
-  const handleMouseMove = (event) => {
+  const handleMouseMove = (event: fabric.IEvent) => {
     if (
       !isMouseDown ||
       !drawingMode ||
@@ -238,9 +254,10 @@ const CanvasPage = () => {
   };
   //
   //trying to add guide lines
-  let horizontalGuide, verticalGuide;
+  let horizontalGuide: fabric.Line | null = null;
+  let verticalGuide: fabric.Line | null = null;
 
-  const addGuideLine = (type, position) => {
+  const addGuideLine = (type: string, position: number) => {
     if (type === "horizontal" && !horizontalGuide) {
       horizontalGuide = new fabric.Line([0, position, canvas.width, position], {
         stroke: "blue",
@@ -260,7 +277,7 @@ const CanvasPage = () => {
     }
   };
 
-  const removeGuideLine = (type) => {
+  const removeGuideLine = (type: string) => {
     if (type === "horizontal" && horizontalGuide) {
       canvas.remove(horizontalGuide);
       horizontalGuide = null;
@@ -271,7 +288,7 @@ const CanvasPage = () => {
   };
 
   // Listen to object movement
-  canvas?.on("object:moving", (e) => {
+  canvas?.on("object:moving", (e: any) => {
     const obj = e.target;
 
     // Canvas center points
@@ -318,7 +335,7 @@ const CanvasPage = () => {
     // Remove previous grid group if it exists
     const existingGridGroup = canvas
       .getObjects()
-      .find((obj) => obj.isGridGroup);
+      .find((obj: fabric.Object | any) => obj.isGridGroup);
     if (existingGridGroup) {
       canvas.remove(existingGridGroup);
     }
@@ -385,7 +402,9 @@ const CanvasPage = () => {
 
     const existingGridGroup = canvas
       .getObjects()
-      .find((obj) => obj.isGridGroup);
+      .find(
+        (obj: fabric.Object & { isGridGroup?: boolean }) => obj.isGridGroup
+      );
     if (existingGridGroup) {
       canvas.remove(existingGridGroup);
     }
@@ -543,7 +562,17 @@ const CanvasPage = () => {
 
         {/* Side Sheet */}
         <div className="absolute bottom-2 right-1 z-30 mr-8 -mb-1">
-          <SideSheet />
+          <SideSheet
+            onExport={() => {
+              if (canvas) {
+                const dataURL = canvas.toDataURL();
+                const link = document.createElement("a");
+                link.download = "canvas-export.png";
+                link.href = dataURL;
+                link.click();
+              }
+            }}
+          />
         </div>
 
         {/* Switch for grid lines */}
