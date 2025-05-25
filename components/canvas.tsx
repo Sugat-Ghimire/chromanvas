@@ -53,70 +53,80 @@ const CanvasPage = () => {
 
   const { handleFileChange } = useImageUploader();
   const { saveState } = useCanvasHistory(canvas);
+  // Updates the initial useEffect for canvas initialization
+
   useEffect(() => {
+    if (!canvasRef.current) return;
+
+    // Create canvas instance with dimensions from the wrapper
     const canvasInstance = new fabric.Canvas(canvasRef.current, {
       backgroundColor: "#FFFFFF",
+      preserveObjectStacking: true,
+      width: canvasRef.current.width,
+      height: canvasRef.current.height,
+      selection: true,
     });
+
+    // Set canvas instance in store
     setCanvas(canvasInstance);
-    requestAnimationFrame(() => {
-      saveState();
-    });
-    //functionality for showing and removing text over the canvas.
-    const canvasLeft =
-      document.querySelector("body")?.getBoundingClientRect()?.width! / 2;
-    const canvasTop =
-      document.querySelector("body")?.getBoundingClientRect()?.height! / 2;
 
-    const instructionText = new fabric.IText(
-      "Click and drag to draw on the canvas",
-      {
-        left: canvasLeft,
-        top: canvasTop,
-        fontSize: 20,
-        fontFamily: "sans-serif",
-        textAlign: "center",
-        originX: "center",
-        originY: "center",
-        fill: "rgba(1, 0, 0, 0.8)",
-        selectable: false,
-        evented: false,
-      }
-    );
-    instructionText.set({
-      objectCaching: false,
-    });
-    canvasInstance.add(instructionText);
+    // Making sure canvas is ready before any operations
+    if (canvasInstance.getContext()) {
+      // Adds instruction text
+      const canvasCenter = {
+        x: canvasInstance.width! / 2,
+        y: canvasInstance.height! / 2,
+      };
 
-    function removeText() {
-      canvasInstance?.remove(instructionText);
+      const instructionText = new fabric.IText(
+        "Click and drag to draw on the canvas",
+        {
+          left: canvasCenter.x,
+          top: canvasCenter.y,
+          fontSize: 20,
+          fontFamily: "sans-serif",
+          textAlign: "center",
+          originX: "center",
+          originY: "center",
+          fill: "rgba(1, 0, 0, 0.8)",
+          selectable: false,
+          evented: false,
+          objectCaching: false,
+        }
+      );
+
+      canvasInstance.add(instructionText);
+      canvasInstance.renderAll();
+
+      // Remove text on first interaction
+      const removeText = () => {
+        canvasInstance.remove(instructionText);
+        canvasInstance.off("mouse:down", removeText);
+        canvasInstance.renderAll();
+      };
+
+      canvasInstance.on("mouse:down", removeText);
     }
-    canvasInstance?.on("mouse:down", removeText);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Delete" && canvasInstance.getActiveObject()) {
-        canvasInstance.remove(canvasInstance.getActiveObject()!);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-
-    const handleWheel = (e: WheelEvent) => {
-      if (e.ctrlKey) {
-        e.preventDefault();
-        const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
-        zoomFactor > 0.9 ? incrementZoom() : decrementZoom();
+    // Handle window resize
+    const handleResize = () => {
+      if (canvasWrapperRef.current) {
+        canvasInstance.setDimensions({
+          width: canvasWrapperRef.current.clientWidth,
+          height: canvasWrapperRef.current.clientHeight,
+        });
+        canvasInstance.renderAll();
       }
     };
 
-    const currentWrapper = canvasWrapperRef.current;
-    currentWrapper?.addEventListener("wheel", handleWheel);
+    window.addEventListener("resize", handleResize);
 
+    // Cleanup
     return () => {
+      window.removeEventListener("resize", handleResize);
       canvasInstance.dispose();
-      window.removeEventListener("keydown", handleKeyDown);
-      currentWrapper?.removeEventListener("wheel", handleWheel);
     };
-  }, [decrementZoom, incrementZoom, saveState, setCanvas]);
-
+  }, []);
   useEffect(() => {
     if (canvas) {
       canvas.setZoom(zoom);
@@ -541,6 +551,8 @@ const CanvasPage = () => {
   }, [canvas, currentTool, drawingMode]);
 
   //
+  let c = canvas;
+
   return (
     <div className="flex-col relative h-screen w-screen">
       {/* Header */}

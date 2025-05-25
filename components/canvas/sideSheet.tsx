@@ -57,10 +57,13 @@ export default function UtilitySidebar({ onExport }: { onExport: () => void }) {
   };
 
   useEffect(() => {
-    canvas?.set({
-      backgroundColor: canvasColor,
+    if (!canvas) return;
+
+    requestAnimationFrame(() => {
+      canvas.setBackgroundColor(canvasColor, () => {
+        canvas.renderAll();
+      });
     });
-    canvas?.renderAll();
   }, [canvasColor, canvas]);
 
   const handleThemeChange = (newTheme: any) => {
