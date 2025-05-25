@@ -1,270 +1,393 @@
-import Image from "next/image";
+"use client";
 
+import { motion, useTransform, useScroll } from "framer-motion";
+import { useRef } from "react";
+import { useInView } from "react-intersection-observer";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import {
+  Users,
+  Brush,
+  Upload,
+  Download,
+  Grid,
+  Github,
+  Undo2,
+  Twitter,
+  Laptop,
+  Sparkles,
+  Zap,
+  Palette,
+} from "lucide-react";
 
-export default function Component() {
+// Feature type definition
+interface Feature {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  gradient: string;
+  delay: number;
+}
+
+// features
+const features: Feature[] = [
+  {
+    title: "Intuitive Drawing Tools",
+    description:
+      "Experience fluid, precise drawing with pressure sensitivity support and customizable brushes. Perfect for both digital artists and designers.",
+    icon: <Brush className="h-6 w-6" />,
+    gradient: "from-blue-400/20 to-cyan-300/20",
+    delay: 0.1,
+  },
+  {
+    title: "Smart Image Management",
+    description:
+      "Import, resize, and manipulate images with ease. Supports multiple formats and maintains high quality for professional results.",
+    icon: <Upload className="h-6 w-6" />,
+    gradient: "from-purple-400/20 to-pink-300/20",
+    delay: 0.2,
+  },
+  {
+    title: "Real-time Collaboration",
+    description:
+      "Work together seamlessly with team members. Share, edit, and create simultaneously with zero lag and automatic syncing.",
+    icon: <Users className="h-6 w-6" />,
+    gradient: "from-green-400/20 to-emerald-300/20",
+    delay: 0.3,
+  },
+  {
+    title: "Professional Export Options",
+    description:
+      "Export your work in various formats including PNG, SVG, and PDF. Maintain quality with resolution control and layer preservation.",
+    icon: <Download className="h-6 w-6" />,
+    gradient: "from-orange-400/20 to-amber-300/20",
+    delay: 0.4,
+  },
+  {
+    title: "Unlimited History",
+    description:
+      "Never lose your work with our robust undo/redo system. Track changes and restore previous versions with ease.",
+    icon: <Undo2 className="h-6 w-6" />,
+    gradient: "from-red-400/20 to-rose-300/20",
+    delay: 0.5,
+  },
+  {
+    title: "Precision Grid System",
+    description:
+      "Achieve perfect alignment with customizable grids and smart guides. Snap-to-grid functionality ensures pixel-perfect designs.",
+    icon: <Grid className="h-6 w-6" />,
+    gradient: "from-indigo-400/20 to-violet-300/20",
+    delay: 0.6,
+  },
+];
+
+// Benefits section data
+const benefits = [
+  {
+    icon: <Laptop className="h-8 w-8" />,
+    title: "Cross-Platform",
+    description:
+      "Work seamlessly across all devices and browsers. Your canvas, everywhere you go.",
+  },
+  {
+    icon: <Palette className="h-8 w-8" />,
+    title: "Design Freedom",
+    description:
+      "No limitations. Create anything from simple sketches to complex illustrations.",
+  },
+  {
+    icon: <Zap className="h-8 w-8" />,
+    title: "Lightning Fast",
+    description:
+      "Optimized performance ensures smooth drawing and responsive controls.",
+  },
+];
+
+export default function Page() {
+  const targetRef = useRef<HTMLDivElement>(null);
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "end start"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+  const y = useTransform(scrollYProgress, [0, 0.2], [100, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [0.9, 1]);
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 lg:px-8 h-16 flex items-center">
-        <div className="flex items-center justify-between w-full">
-          <Link
-            href="#"
-            className="flex items-center gap-2 text-gray-800 dark:text-gray-100 font-bold"
-            prefetch={false}
-          >
-            <BrushIcon className="h-8 w-8 text-blue-600" />
-            <span className="text-xl">Chromanvas</span>
-          </Link>
+    <div className="min-h-screen bg-gradient-to-b from-background via-background/95 to-background relative overflow-hidden">
+      {/* */}
+      <div className="absolute inset-0 bg-grid-white/[0.01] -z-10" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-secondary/5 -z-10" />
 
-          <nav className="hidden md:flex items-center gap-6">
+      {/*  Header */}
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="fixed top-0 w-full z-50 border-b border-border/40 backdrop-blur-md bg-background/80"
+      >
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2">
+            <Sparkles className="h-6 w-6 text-primary" />
+            <span className="font-bold text-xl">Chromanvas</span>
+          </Link>
+          <nav className="hidden md:flex items-center space-x-8">
             <Link
-              href="#"
-              className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              prefetch={false}
+              href="#features"
+              className="text-sm font-medium hover:text-primary transition-colors"
             >
               Features
             </Link>
             <Link
-              href="#"
-              className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              prefetch={false}
+              href="#demo"
+              className="text-sm font-medium hover:text-primary transition-colors"
             >
-              About
+              Demo
             </Link>
             <Link
-              href="#"
-              className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              prefetch={false}
+              href="/canvas"
+              className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
             >
-              Contact
+              Launch App
             </Link>
           </nav>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden flex items-center justify-center p-2 rounded-lg text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800"
-            aria-label="Open Menu"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
         </div>
-      </header>
+      </motion.header>
 
-      <main className="flex-1">
-        <section className="w-full pt-12 md:pt-24 lg:pt-32 border-y">
-          <div className="container space-y-10 xl:space-y-16 px-4 md:px-6">
-            <div className="grid max-w-[1300px] mx-auto gap-4 px-4 sm:px-6 md:px-10 md:grid-cols-2 md:gap-16">
-              <div>
-                <h1 className="opacity-80 lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
-                  Unleash Your Creativity with Chromanvas
-                </h1>
-              </div>
-              <div className="flex flex-col items-start space-y-4">
-                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                  Bring your ideas to life with our powerful drawing canvas.
-                  Easily create stunning designs, wireframes, and more.
-                </p>
-                <div className="space-x-4">
-                  <Link
-                    href="#"
-                    className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    prefetch={false}
-                  >
-                    Get Started
-                  </Link>
-                  <Link
-                    href="#"
-                    className="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    prefetch={false}
-                  >
-                    Learn More
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="flex-1 relative">
-              <canvas className="w-full h-[500px] bg-background rounded-t-xl" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-muted-foreground text-center">
-                  Click and drag to draw shapes. CTRL+O to upload an image.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container space-y-12 px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
-                  Powerful Features
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  Bring Your Designs to Life
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Our drawing canvas empowers you to create stunning visuals,
-                  wireframes, and more. Explore our advanced tools and features
-                  to unleash your creativity.
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid items-start gap-8 sm:max-w-4xl sm:grid-cols-2 md:gap-12 lg:max-w-5xl lg:grid-cols-3">
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">Shapes and Layers</h3>
-                <p className="text-sm text-muted-foreground">
-                  Create and manipulate a variety of shapes, and organize them
-                  into layers for precise control.
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">Image Upload</h3>
-                <p className="text-sm text-muted-foreground">
-                  Easily import images and use them as a starting point for your
-                  designs.
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">Color Palette</h3>
-                <p className="text-sm text-muted-foreground">
-                  Choose from a wide range of colors or create your own custom
-                  palettes.
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">Text and Annotations</h3>
-                <p className="text-sm text-muted-foreground">
-                  Add text, labels, and annotations to your designs for clarity
-                  and context.
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">Export and Share</h3>
-                <p className="text-sm text-muted-foreground">
-                  Export your creations in various formats and share them with
-                  others.
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">Collaboration</h3>
-                <p className="text-sm text-muted-foreground">
-                  Invite team members to collaborate on designs in real-time.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center">
+      {/*  Hero Section */}
+      <section className="pt-32 pb-24 relative min-h-screen flex items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="container mx-auto px-4"
+        >
+          <div className="max-w-5xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 1 }}
+              className="mb-8"
+            >
+              <span className="px-3 py-1 text-sm font-medium bg-primary/10 text-primary rounded-full inline-block mb-4">
+                Version 2.0 Now Available
+              </span>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-tight">
+                Create Amazing Art with{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                  Chromanvas
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
+                A powerful digital canvas that brings your creative ideas to
+                life. Professional tools, real-time collaboration, and unlimited
+                possibilities.
+              </p>
+            </motion.div>
+
+            {/**/}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="flex flex-col sm:flex-row justify-center gap-6"
+            >
               <Link
                 href="/canvas"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                prefetch={false}
+                className="group inline-flex items-center justify-center px-8 py-4 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-primary/25"
               >
-                Start Drawing
+                Start Creating
+                <Sparkles className="ml-2 h-5 w-5 transition-transform group-hover:scale-110" />
+              </Link>
+              <Link
+                href="#demo"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-secondary/10 hover:bg-secondary/20 transition-all duration-300"
+              >
+                Watch Demo
+              </Link>
+            </motion.div>
+
+            {/*  */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 1 }}
+              className="mt-16 pt-16 border-t border-border/40"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <h3 className="text-3xl font-bold mb-2">10</h3>
+                  <p className="text-muted-foreground">Active Users</p>
+                </div>
+                <div className="text-center">
+                  <h3 className="text-3xl font-bold mb-2">100</h3>
+                  <p className="text-muted-foreground">Artworks Created</p>
+                </div>
+                <div className="text-center">
+                  <h3 className="text-3xl font-bold mb-2">4.9/5</h3>
+                  <p className="text-muted-foreground">User Rating</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Features Section */}
+      <section
+        ref={targetRef}
+        id="features"
+        className="py-32 relative bg-gradient-to-b from-background/50 via-background/30 to-background/50"
+      >
+        <motion.div
+          style={{ opacity, y, scale }}
+          className="container mx-auto px-4"
+        >
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Everything You Need to Create
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Powerful features designed for professional creators and beginners
+              alike.
+            </p>
+          </div>
+
+          <motion.div
+            ref={ref}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {features.map((feature) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: feature.delay, duration: 0.5 }}
+                className="group relative p-8 rounded-2xl border border-border/40 bg-gradient-to-b from-background/50 to-background/30 hover:border-primary/30 transition-all duration-500"
+              >
+                <div
+                  className={`absolute inset-0 opacity-0 group-hover:opacity-10 ${feature.gradient} rounded-2xl transition-opacity duration-500`}
+                />
+                <div
+                  className={`inline-flex p-4 rounded-xl ${feature.gradient} mb-6`}
+                >
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-5">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-32 relative">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="container mx-auto px-4"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={benefit.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+                className="text-center"
+              >
+                <div className="inline-flex p-4 rounded-xl bg-primary/5 mb-6">
+                  {benefit.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-4">{benefit.title}</h3>
+                <p className="text-muted-foreground">{benefit.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/*  */}
+      <section className="py-32 relative bg-gradient-to-b from-background/50 to-background">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="container mx-auto px-4 text-center"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-8">
+            Ready to Start Creating?
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mb-12 mx-auto">
+            Join hundrens of creators who use Chromanvas to bring their ideas to
+            life. Start your creative journey today.
+          </p>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/canvas"
+              className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-primary/25"
+            >
+              Launch Canvas
+              <Sparkles className="ml-2 h-5 w-5" />
+            </Link>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/*  Footer */}
+      <footer className="border-t border-border/40 bg-background/80 backdrop-blur-md">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="h-6 w-6 text-primary" />
+              <span className="font-bold text-xl">Chromanvas</span>
+            </div>
+            <div className="flex items-center space-x-6">
+              <Link
+                href="https://github.com"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Github className="h-5 w-5" />
+              </Link>
+              <Link
+                href="https://twitter.com"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Twitter className="h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-border/40 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              © 2024 Chromanvas. All rights reserved.
+            </p>
+            <nav className="flex items-center space-x-6">
+              <Link
+                href="#"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                Privacy Policy
               </Link>
               <Link
                 href="#"
-                className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                prefetch={false}
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
-                Learn More
+                Terms of Service
               </Link>
-            </div>
+            </nav>
           </div>
-        </section>
-        <section className="w-full py-16 md:py-28 lg:py-36 bg-gray-50 dark:bg-gray-900 border-t">
-          <div className="container grid gap-8 px-6 md:px-12 lg:px-20 text-center md:text-left">
-            <div className="space-y-4">
-              <h2 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-gray-100 md:text-5xl lg:text-5xl">
-                Ready to Unleash Your Creativity?
-              </h2>
-              <p className="max-w-xl mx-auto text-gray-600 dark:text-gray-300 md:mx-0 md:text-lg lg:text-xl">
-                Sign up today and start creating stunning designs with the
-                powerful tools of Chromanvas.
-              </p>
-            </div>
-            <div className="w-full max-w-lg mx-auto md:mx-0">
-              <form className="flex flex-col gap-4 sm:flex-row">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full flex-1 rounded-lg border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-                <Button
-                  type="submit"
-                  className="w-full sm:w-auto px-6 py-3 rounded-lg text-white  focus:outline-none"
-                >
-                  Get Started
-                </Button>
-              </form>
-              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                Sign up to unlock the full potential of Chromanvas.{" "}
-                <Link
-                  href="#"
-                  className="text-blue-600 hover:underline dark:text-blue-400"
-                  prefetch={false}
-                >
-                  Terms &amp; Conditions
-                </Link>
-              </p>
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer className="flex flex-col gap-4 sm:flex-row items-center justify-between py-6 w-full px-4 md:px-8 border-t bg-gray-50 dark:bg-gray-900">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          &copy; {new Date().getFullYear()} Chromanvas. All rights reserved.
-        </p>
-        <nav className="flex gap-6">
-          <Link
-            href="#"
-            className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            prefetch={false}
-          >
-            Terms of Service
-          </Link>
-          <Link
-            href="#"
-            className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            prefetch={false}
-          >
-            Privacy
-          </Link>
-        </nav>
+        </div>
       </footer>
     </div>
-  );
-}
-
-function BrushIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08" />
-      <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z" />
-    </svg>
   );
 }
