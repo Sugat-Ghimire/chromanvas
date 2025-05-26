@@ -86,7 +86,7 @@ const CanvasPage = () => {
           fontSize: 20,
           fontFamily: "sans-serif",
           textAlign: "center",
-          originX: "center",
+          originX: "right",
           originY: "center",
           fill: "rgba(1, 0, 0, 0.8)",
           selectable: false,
