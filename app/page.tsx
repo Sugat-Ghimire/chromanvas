@@ -346,45 +346,172 @@ export default function Page() {
 
       {/*  Footer */}
       <footer className="border-t border-border/40 bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="h-6 w-6 text-primary" />
-              <span className="font-bold text-xl">Chromanvas</span>
+        <div className="container mx-auto px-4 py-12">
+          {/* Main Footer Content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            {/* Brand Section */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Sparkles className="h-6 w-6 text-primary" />
+                <span className="font-bold text-xl">Chromanvas</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Bringing creativity to life with powerful digital canvas tools
+                and collaborative features.
+              </p>
+              <div className="flex items-center space-x-4">
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_GITHUB_URL}`}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Github className="h-5 w-5" />
+                </Link>
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_X_URL}`}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Twitter className="h-5 w-5" />
+                </Link>
+              </div>
             </div>
-            <div className="flex items-center space-x-6">
-              <Link
-                href="https://github.com"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Github className="h-5 w-5" />
-              </Link>
-              <Link
-                href="https://twitter.com"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Twitter className="h-5 w-5" />
-              </Link>
+
+            {/* Product Links */}
+            <div>
+              <h3 className="font-semibold mb-4">Product</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    href="#features"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#demo"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Demo
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/canvas"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Launch App
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Pricing
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Resources Links */}
+            <div>
+              <h3 className="font-semibold mb-4">Resources</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Documentation
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Tutorials
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Support
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Contact Section */}
+            <div>
+              <h3 className="font-semibold mb-4">Contact</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Feedback
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-border/40 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
-              © 2024 Chromanvas. All rights reserved.
-            </p>
-            <nav className="flex items-center space-x-6">
-              <Link
-                href="#"
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="#"
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                Terms of Service
-              </Link>
-            </nav>
+
+          {/* Bottom Section */}
+          <div className="pt-8 border-t border-border/40">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-sm text-muted-foreground">
+                © 2025 Chromanvas. All rights reserved.
+              </p>
+              <nav className="flex items-center space-x-6">
+                <Link
+                  href="#"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+                <Link
+                  href="#"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Terms of Service
+                </Link>
+                <Link
+                  href="#"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Cookie Policy
+                </Link>
+              </nav>
+            </div>
           </div>
         </div>
       </footer>
